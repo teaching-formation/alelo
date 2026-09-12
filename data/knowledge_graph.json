@@ -1,0 +1,290 @@
+{
+  "services": {
+    "passeport": {
+      "service": "passeport",
+      "institution": null,
+      "documents": [
+        "Une photo d’identité (photo récente)",
+        "L’extrait de naissance original",
+        "Une autorisation parentale légalisée à la mairie",
+        "Une copie et original de la CNI du parent qui donne l’autorisation",
+        "Le reçu de paiement des frais de passeport payé à ECOBANK / BACI ou les documents envoyés par e-mail suite au pré-enrôlement en ligne sur www.monpasseport.ci"
+      ],
+      "cout": "40.000F CFA",
+      "delai": "72 heures après validation par la police de l’air et des frontières en Côte d’Ivoire ( S/DPAF)",
+      "id": "passeport",
+      "orgs": [
+        "SNEDAI"
+      ],
+      "sources": [
+        "https://snedai.com/passeport-en-cote-divoire/"
+      ]
+    },
+    "cni": {
+      "service": "cni",
+      "institution": "ONECI",
+      "documents": [
+        "reçu d’achat et le formulaire rempli",
+        "l’ancienne Carte Nationale d’Identité"
+      ],
+      "cout": "5 000 F CFA",
+      "delai": "Quarante-cinq (45) jours",
+      "ou": "(+225) 20 30 79 00 / 20 25 45 59 / 800 00 900",
+      "id": "cni",
+      "orgs": [
+        "SERVICEPUBLIC"
+      ],
+      "sources": [
+        "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/209/38",
+        "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/220/38",
+        "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/207/38"
+      ]
+    },
+    "permis_conduire": {
+      "service": "permis_conduire",
+      "institution": null,
+      "documents": [
+        "Une photocopie lisible du document d’identification en cours de validité (présentation de l'original)",
+        "Un certificat de déclaration de perte en original du permis de conduire en cas de perte ou de vol ou l'original du permis de conduire détérioré",
+        "L'original de l'attestation de non retrait du permis de conduire en cas de déclaration de perte délivrée par l’Administration en charge du transport routier"
+      ],
+      "cout": null,
+      "delai": null,
+      "id": "permis_conduire",
+      "orgs": [
+        "TRANSPORTS"
+      ],
+      "sources": [
+        "https://transports.gouv.ci/sites/default/files/documents_d_identification_et_composition_de_dossiers.pdf",
+        "https://transports.gouv.ci/sites/default/files/permis_de_conduire.pdf"
+      ]
+    },
+    "acte_naissance": {
+      "service": "acte_naissance",
+      "institution": "ONECI",
+      "documents": [
+        "L'original de l'extrait d'acte de naissance",
+        "La copie de la Carte Nationale d'Identité ou la fiche d'Identité délivrée par l'ONECI portant la mention à modifier",
+        "L'original de l'extrait d'acte de naissance des parents ou la copie de la CNI des parents",
+        "La quittance de Cinq Mille Francs (5000F) en ligne 'www.rnpp.ci'",
+        "Décision de Justice. (Certification d'individualité, grosse)"
+      ],
+      "cout": "5 000 F CFA",
+      "delai": "Quarante-cinq (45) jours",
+      "ou": "ONE",
+      "id": "acte_naissance",
+      "orgs": [
+        "SERVICEPUBLIC"
+      ],
+      "sources": [
+        "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/207/38",
+        "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/570/13",
+        "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/211/38"
+      ]
+    },
+    "certificat_nationalite": {
+      "service": "certificat_nationalite",
+      "institution": null,
+      "documents": [
+        "Un formulaire de demande",
+        "Un certificat de nationalité ivoirienne ou à défaut la photocopie de la CNI d’un des parents de nationalité ivoirienne"
+      ],
+      "cout": "2,500 F.CFA + 700 F.CFA de timbre fiscal",
+      "delai": "24H après le depot des dossiers",
+      "id": "certificat_nationalite",
+      "orgs": [
+        "SERVICEPUBLIC"
+      ],
+      "sources": [
+        "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/42/141",
+        "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/37/141",
+        "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/573/13"
+      ]
+    },
+    "casier_judiciaire": {
+      "service": "casier_judiciaire",
+      "institution": null,
+      "documents": [
+        "Idem que pour la naturalisation",
+        "A voir"
+      ],
+      "cout": "2,500 F.CFA + 500 F.CFA de timbre fiscal",
+      "delai": "24H après le depot des dossiers.",
+      "ou": "Service des casiers judiciaires et certificats de nationalité",
+      "id": "casier_judiciaire",
+      "orgs": [
+        "SERVICEPUBLIC"
+      ],
+      "sources": [
+        "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/402/157",
+        "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/570/13",
+        "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/573/13"
+      ]
+    },
+    "carte_sejour": {
+      "service": "carte_sejour",
+      "institution": "Office National de l’État Civil (ONECI)",
+      "documents": [
+        "La copie du passeport et visa",
+        "La photocopie du passeport et visa"
+      ],
+      "cout": null,
+      "delai": "Quarante-cinq (45) jours",
+      "ou": "Office National de l’État Civil (ONECI)",
+      "id": "carte_sejour",
+      "orgs": [
+        "SERVICEPUBLIC"
+      ],
+      "sources": [
+        "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/214/38",
+        "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/215/38",
+        "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/212/38"
+      ]
+    },
+    "acte_mariage": {
+      "service": "acte_mariage",
+      "institution": null,
+      "documents": [
+        "Copie de l'acte sollicité ou les références"
+      ],
+      "cout": "3 500 F C",
+      "delai": null,
+      "ou": null,
+      "id": "acte_mariage",
+      "orgs": [
+        "SERVICEPUBLIC"
+      ],
+      "sources": [
+        "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/300/1",
+        "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/205/38",
+        "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/573/13"
+      ]
+    },
+    "creation_entreprise": {
+      "service": "creation_entreprise",
+      "institution": null,
+      "documents": [
+        "Une lettre de demande d'autorisation d’implantation d’une unité industrielle",
+        "Une attestation sur l’honneur d’obtention de l’autorisation administrative"
+      ],
+      "cout": null,
+      "delai": null,
+      "ou": "CEPICI (Direction du Guichet Unique de l’investissement / Service Code des Investissements)",
+      "id": "creation_entreprise",
+      "orgs": [
+        "CEPICI"
+      ],
+      "sources": [
+        "https://cepici.ci/admin/pdf/codeinvestir/1763741408.pdf",
+        "https://cepici.ci/reforme",
+        "https://cepici.ci/admin/pdf/codeinvestir/1763717243.pdf"
+      ]
+    },
+    "impots": {
+      "service": "e-impots.gouv.ci",
+      "institution": "Direction Générale des Impôts de Côte d'Ivoire",
+      "documents": [
+        "Numéro de Compte Contribuable (NCC)",
+        "Numéro de Télédéclarant (NTD)",
+        "autorisation du mandataire social"
+      ],
+      "cout": null,
+      "delai": "10 minutes",
+      "id": "impots",
+      "orgs": [
+        "DGI"
+      ],
+      "sources": [
+        "https://e-impots.gouv.ci/",
+        "https://e-impots.gouv.ci/index/login-expert-comptable",
+        "https://e-impots.gouv.ci/guide/presentation-portail.pdf"
+      ]
+    },
+    "carte_grise": {
+      "service": "carte_grise",
+      "institution": null,
+      "documents": [
+        "photocopie lisible du document d’identification en cours de validité",
+        "certificat de résidence dans la nouvelle région d’immatriculation",
+        "photocopie lisible de la vignette et du certificat de visite technique en cours de validité",
+        "photocopie de la facture CIE ou SODECI ou le certificat de residence",
+        "photocopie lisible du document approprié à son statut juridique",
+        "original du certificat de résidence",
+        "certificat de déclaration de perte en original en cas de perte ou de vol",
+        "procès verbal de constat de vol du véhicule (si applicable)",
+        "photocopie lisible de la carte grise ou un certificat de déclaration de perte"
+      ],
+      "cout": null,
+      "delai": null,
+      "ou": null,
+      "id": "carte_grise",
+      "orgs": [
+        "TRANSPORTS"
+      ],
+      "sources": [
+        "https://transports.gouv.ci/sites/default/files/documents_d_identification_et_composition_de_dossiers.pdf"
+      ]
+    },
+    "carte_resident": {
+      "service": "carte_resident",
+      "institution": "Office National de l'État Civil (ONECI)",
+      "documents": [
+        "La photocopie du passeport et du visa",
+        "La copie de la carte de résident en cours de validité du père, ou de la mère ou du tuteur étranger",
+        "La copie de l'attestation de travail du père ou de la mère ou du tuteur",
+        "La copie du registre de commerce et l'attestation de régularité fiscale du père ou de la mère ou du tuteur commerçant"
+      ],
+      "cout": null,
+      "delai": "non déterminé",
+      "id": "carte_resident",
+      "orgs": [
+        "SERVICEPUBLIC"
+      ],
+      "sources": [
+        "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/214/38",
+        "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/216/38",
+        "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/213/38"
+      ]
+    }
+  },
+  "institutions": {
+    "SNEDAI": {
+      "label": "SNEDAI (passeports)",
+      "services": [
+        "passeport"
+      ]
+    },
+    "SERVICEPUBLIC": {
+      "label": "Service Public",
+      "services": [
+        "cni",
+        "acte_naissance",
+        "certificat_nationalite",
+        "casier_judiciaire",
+        "carte_sejour",
+        "acte_mariage",
+        "carte_resident"
+      ]
+    },
+    "TRANSPORTS": {
+      "label": "Ministère des Transports",
+      "services": [
+        "permis_conduire",
+        "carte_grise"
+      ]
+    },
+    "CEPICI": {
+      "label": "CEPICI (investissement)",
+      "services": [
+        "creation_entreprise"
+      ]
+    },
+    "DGI": {
+      "label": "Direction Générale des Impôts",
+      "services": [
+        "impots"
+      ]
+    }
+  },
+  "generated_model": "alelo-14b"
+}

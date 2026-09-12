@@ -1,0 +1,44 @@
+# Web scraping
+crawl4ai==0.4.247
+beautifulsoup4==4.12.3
+requests==2.31.0
+lxml>=5.3.0
+pypdf==4.3.1
+python-docx==1.1.2
+openpyxl==3.1.5
+fpdf2==2.8.1
+
+# LangChain ecosystem
+langchain==0.2.16
+langchain-community==0.2.16
+langchain-core==0.2.38
+
+# Vector store
+chromadb==0.5.23
+langchain-chroma==0.1.4
+
+# Ollama integration
+ollama==0.3.3
+
+# Streamlit UI
+streamlit==1.38.0
+
+# Text processing
+tiktoken==0.7.0
+python-dotenv==1.0.1
+
+# Hybrid search
+rank-bm25==0.2.2
+
+# Voix (100% local / offline)
+streamlit-mic-recorder==0.0.8   # widget micro dans le navigateur
+faster-whisper==1.0.3           # STT : voix → texte
+piper-tts==1.2.0                # TTS : texte → voix (français)
+
+# Mode vocal immersif (page dédiée FastAPI)
+fastapi==0.115.0
+uvicorn==0.30.6
+python-multipart==0.0.9
+
+# Async support
+nest-asyncio==1.6.0

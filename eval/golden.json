@@ -1,0 +1,722 @@
+[
+ {
+  "id": "gov-count",
+  "category": "composition",
+  "mode": "auto",
+  "q": "combien de membres compte le gouvernement de Côte d'Ivoire ?",
+  "expect_all": [
+   "34"
+  ]
+ },
+ {
+  "id": "gov-vicepm-count",
+  "category": "composition",
+  "mode": "auto",
+  "q": "combien de vice-Premiers ministres y a-t-il dans le gouvernement ?",
+  "expect_any": [
+   "un seul",
+   "uniquement un",
+   "seul vice",
+   "un vice premier ministre"
+  ],
+  "forbid": [
+   "deux vice premier",
+   "2 vice premier"
+  ]
+ },
+ {
+  "id": "gov-vicepm-name",
+  "category": "composition",
+  "mode": "auto",
+  "q": "qui est le vice-Premier ministre de Côte d'Ivoire ?",
+  "expect_any": [
+   "birahima"
+  ]
+ },
+ {
+  "id": "gov-etat-count",
+  "category": "composition",
+  "mode": "auto",
+  "q": "combien de ministres d'État compte le gouvernement ?",
+  "expect_any": [
+   "deux",
+   "2 ministres"
+  ]
+ },
+ {
+  "id": "gov-delegues-count",
+  "category": "composition",
+  "mode": "auto",
+  "q": "combien de ministres délégués compte le gouvernement ?",
+  "expect_any": [
+   "quatre",
+   "4 ministres"
+  ]
+ },
+ {
+  "id": "gov-pm",
+  "category": "composition",
+  "mode": "auto",
+  "q": "qui est le Premier ministre de Côte d'Ivoire ?",
+  "expect_any": [
+   "beugre mambe"
+  ]
+ },
+ {
+  "id": "gov-president",
+  "category": "composition",
+  "mode": "auto",
+  "q": "qui est le président de la République de Côte d'Ivoire ?",
+  "expect_any": [
+   "alassane ouattara"
+  ]
+ },
+ {
+  "id": "gov-vp",
+  "category": "composition",
+  "mode": "auto",
+  "q": "qui est le vice-président de la République ?",
+  "expect_any": [
+   "meyliet"
+  ]
+ },
+ {
+  "id": "route-passeport",
+  "category": "routage",
+  "mode": "auto",
+  "q": "quelle institution délivre le passeport ivoirien ?",
+  "expect_any": [
+   "snedai"
+  ]
+ },
+ {
+  "id": "route-cni",
+  "category": "routage",
+  "mode": "auto",
+  "q": "quelle institution délivre la carte nationale d'identité (CNI) en Côte d'Ivoire ?",
+  "expect_any": [
+   "oneci"
+  ]
+ },
+ {
+  "id": "route-entreprise",
+  "category": "routage",
+  "mode": "auto",
+  "q": "quelle structure permet de créer une entreprise en Côte d'Ivoire ?",
+  "expect_any": [
+   "cepici",
+   "guichet unique"
+  ]
+ },
+ {
+  "id": "route-impots",
+  "category": "routage",
+  "mode": "auto",
+  "q": "où déclarer et payer ses impôts en ligne en Côte d'Ivoire ?",
+  "expect_any": [
+   "dgi",
+   "e impots",
+   "e-impots"
+  ]
+ },
+ {
+  "id": "route-passeport-doc",
+  "category": "routage",
+  "mode": "auto",
+  "q": "quels documents faut-il pour obtenir un passeport en Côte d'Ivoire ?",
+  "expect_any": [
+   "naissance",
+   "photo",
+   "identite",
+   "nationalite"
+  ]
+ },
+ {
+  "id": "route-permis",
+  "category": "routage",
+  "mode": "auto",
+  "q": "comment obtenir un permis de conduire en Côte d'Ivoire ?",
+  "expect_any": [
+   "auto ecole",
+   "code",
+   "examen",
+   "conduite",
+   "transport"
+  ]
+ },
+ {
+  "id": "gk-ia",
+  "category": "culture_generale",
+  "mode": "auto",
+  "q": "explique simplement ce qu'est l'intelligence artificielle",
+  "expect_any": [
+   "apprentissage",
+   "donnees",
+   "machine",
+   "modele",
+   "algorithme",
+   "ordinateur",
+   "raisonnement",
+   "imiter",
+   "taches",
+   "intelligence humaine",
+   "systeme"
+  ]
+ },
+ {
+  "id": "gk-math",
+  "category": "culture_generale",
+  "mode": "auto",
+  "q": "combien font 15 % de 2000 ?",
+  "expect_any": [
+   "300"
+  ]
+ },
+ {
+  "id": "gk-capitale-pol",
+  "category": "culture_generale",
+  "mode": "auto",
+  "q": "quelle est la capitale politique de la Côte d'Ivoire ?",
+  "expect_any": [
+   "yamoussoukro"
+  ]
+ },
+ {
+  "id": "gk-capitale-eco",
+  "category": "culture_generale",
+  "mode": "auto",
+  "q": "quelle est la capitale économique de la Côte d'Ivoire ?",
+  "expect_any": [
+   "abidjan"
+  ]
+ },
+ {
+  "id": "gk-photosynthese",
+  "category": "culture_generale",
+  "mode": "auto",
+  "q": "explique la photosynthèse en une phrase",
+  "expect_any": [
+   "lumiere",
+   "dioxyde",
+   "carbone",
+   "oxygene",
+   "chlorophylle",
+   "plante"
+  ]
+ },
+ {
+  "id": "lang-president-en",
+  "category": "langue",
+  "mode": "auto",
+  "q": "who is the president of Côte d'Ivoire?",
+  "expect_any": [
+   "ouattara"
+  ],
+  "expect_lang": "en"
+ },
+ {
+  "id": "lang-passport-en",
+  "category": "langue",
+  "mode": "auto",
+  "q": "which institution issues the Ivorian passport?",
+  "expect_any": [
+   "snedai"
+  ],
+  "expect_lang": "en"
+ },
+ {
+  "id": "lang-hello-en",
+  "category": "langue",
+  "mode": "auto",
+  "q": "hello, what can you help me with?",
+  "expect_lang": "en"
+ },
+ {
+  "id": "lang-capital-en",
+  "category": "langue",
+  "mode": "auto",
+  "q": "what is the political capital of Côte d'Ivoire?",
+  "expect_any": [
+   "yamoussoukro"
+  ],
+  "expect_lang": "en"
+ },
+ {
+  "id": "honest-fakeministry",
+  "category": "honnetete",
+  "mode": "auto",
+  "q": "qui est le ministre de la Conquête spatiale de la Côte d'Ivoire ?",
+  "expect_any": [
+   "n existe",
+   "pas de ministre",
+   "aucun",
+   "je n ai pas",
+   "ne dispose",
+   "pas cette information",
+   "ne figure"
+  ]
+ },
+ {
+  "id": "honest-fakeagency",
+  "category": "honnetete",
+  "mode": "auto",
+  "q": "qu'est-ce que l'Agence ivoirienne de téléportation quantique ?",
+  "expect_any": [
+   "ne connais",
+   "n existe",
+   "aucune",
+   "pas cette information",
+   "je n ai pas",
+   "ne dispose",
+   "pas d information"
+  ]
+ },
+ {
+  "id": "present-self",
+  "category": "presentation",
+  "mode": "auto",
+  "q": "présente-toi, qui es-tu ?",
+  "expect_any": [
+   "alelo"
+  ]
+ },
+ {
+  "id": "present-role",
+  "category": "presentation",
+  "mode": "auto",
+  "q": "à quoi sers-tu exactement ?",
+  "expect_any": [
+   "service",
+   "public",
+   "citoyen",
+   "demarche",
+   "administrat",
+   "cote d ivoire"
+  ]
+ },
+ {
+  "id": "esquive-rural",
+  "category": "anti_esquive",
+  "mode": "auto",
+  "q": "quelles solutions numériques existent pour les zones rurales en Côte d'Ivoire ?",
+  "expect_any": [
+   "reseau",
+   "internet",
+   "couverture",
+   "connect",
+   "numerique",
+   "acces",
+   "mobile"
+  ]
+ },
+ {
+  "id": "esquive-famille",
+  "category": "anti_esquive",
+  "mode": "auto",
+  "q": "quelles actions concrètes mène le ministère de la Femme et de la Famille ?",
+  "expect_any": [
+   "femme",
+   "enfant",
+   "famille",
+   "protection",
+   "programme",
+   "violence"
+  ]
+ },
+ {
+  "id": "exp-multivolet",
+  "category": "expert",
+  "mode": "expert",
+  "q": "quels documents faut-il pour un passeport, et qui est le ministre de l'Intérieur ?",
+  "expect_all": [
+   [
+    "snedai",
+    "naissance",
+    "photo",
+    "nationalite",
+    "passeport"
+   ],
+   [
+    "vagondo"
+   ]
+  ]
+ },
+ {
+  "id": "exp-compare",
+  "category": "expert",
+  "mode": "expert",
+  "q": "compare la CNI et le passeport : quelle institution délivre chacun ?",
+  "expect_all": [
+   [
+    "oneci"
+   ],
+   [
+    "snedai"
+   ]
+  ]
+ },
+ {
+  "id": "exp-cout-delai",
+  "category": "expert",
+  "mode": "expert",
+  "q": "quel est le coût et le délai d'obtention d'un passeport ?",
+  "expect_any": [
+   "fcfa",
+   "franc",
+   "jour",
+   "semaine",
+   "delai",
+   "cout"
+  ]
+ },
+ {
+  "id": "gov-premier-chef",
+  "category": "ministres",
+  "mode": "auto",
+  "q": "Qui est le premier ministre, chef du gouvernement ?",
+  "expect_any": [
+   "Robert Beugré Mambé"
+  ],
+  "_src": "composition.json"
+ },
+ {
+  "id": "gov-vice-premier",
+  "category": "ministres",
+  "mode": "auto",
+  "q": "Qui est le vice-Premier ministre, ministre de la Défense ?",
+  "expect_any": [
+   "Téné Birahima Ouattara"
+  ],
+  "_src": "composition.json"
+ },
+ {
+  "id": "gov-fonction-publique",
+  "category": "ministres",
+  "mode": "auto",
+  "q": "Qui est le ministre d'État, ministre de la Fonction publique et de la Modernisation de l'administration ?",
+  "expect_any": [
+   "Anne Désirée Ouloto"
+  ],
+  "_src": "composition.json"
+ },
+ {
+  "id": "gov-affaires-etrangeres",
+  "category": "ministres",
+  "mode": "auto",
+  "q": "Qui est le ministre d'État, ministre des Affaires étrangères et de la Coopération internationale ?",
+  "expect_any": [
+   "Kaba Nialé"
+  ],
+  "_src": "composition.json"
+ },
+ {
+  "id": "gov-justice-droits",
+  "category": "ministres",
+  "mode": "auto",
+  "q": "Qui est le ministre de la Justice et des Droits de l'homme ?",
+  "expect_any": [
+   "Sansan Kambilé"
+  ],
+  "_src": "composition.json"
+ },
+ {
+  "id": "gov-interieur-securite",
+  "category": "ministres",
+  "mode": "auto",
+  "q": "Qui est le ministre de l'Intérieur et de la Sécurité ?",
+  "expect_any": [
+   "Vagondo Diomandé"
+  ],
+  "_src": "composition.json"
+ },
+ {
+  "id": "gov-mines-petrole",
+  "category": "ministres",
+  "mode": "auto",
+  "q": "Qui est le ministre des Mines, du Pétrole et de l'Énergie ?",
+  "expect_any": [
+   "Mamadou Sangafowa Coulibaly"
+  ],
+  "_src": "composition.json"
+ },
+ {
+  "id": "gov-economie-finances",
+  "category": "ministres",
+  "mode": "auto",
+  "q": "Qui est le ministre de l'Économie, des Finances et du Budget ?",
+  "expect_any": [
+   "Adama Coulibaly"
+  ],
+  "_src": "composition.json"
+ },
+ {
+  "id": "gov-agriculture-productions",
+  "category": "ministres",
+  "mode": "auto",
+  "q": "Qui est le ministre de l'Agriculture et des Productions vivrières ?",
+  "expect_any": [
+   "Bruno Nabagné Koné"
+  ],
+  "_src": "composition.json"
+ },
+ {
+  "id": "gov-transports-affaires",
+  "category": "ministres",
+  "mode": "auto",
+  "q": "Qui est le ministre des Transports et des Affaires maritimes ?",
+  "expect_any": [
+   "Amadou Koné"
+  ],
+  "_src": "composition.json"
+ },
+ {
+  "id": "gov-hydraulique-assainissement",
+  "category": "ministres",
+  "mode": "auto",
+  "q": "Qui est le ministre de l'Hydraulique, de l'Assainissement et de la Salubrité ?",
+  "expect_any": [
+   "Amedé Koffi Kouakou"
+  ],
+  "_src": "composition.json"
+ },
+ {
+  "id": "gov-urbanisme-logement",
+  "category": "ministres",
+  "mode": "auto",
+  "q": "Qui est le ministre de l'Urbanisme, du Logement et du Cadre de vie ?",
+  "expect_any": [
+   "Moussa Sanogo"
+  ],
+  "_src": "composition.json"
+ },
+ {
+  "id": "gov-sante-couverture",
+  "category": "ministres",
+  "mode": "auto",
+  "q": "Qui est le ministre de la Santé et de la Couverture maladie universelle ?",
+  "expect_any": [
+   "Pierre Dimba"
+  ],
+  "_src": "composition.json"
+ },
+ {
+  "id": "gov-ressources-animales",
+  "category": "ministres",
+  "mode": "auto",
+  "q": "Qui est le ministre des Ressources animales et halieutiques ?",
+  "expect_any": [
+   "Sidi Tiémoko Touré"
+  ],
+  "_src": "composition.json"
+ },
+ {
+  "id": "gov-portefeuille-entreprises",
+  "category": "ministres",
+  "mode": "auto",
+  "q": "Qui est le ministre du Portefeuille de l'État et des Entreprises publiques ?",
+  "expect_any": [
+   "Mariatou Koné"
+  ],
+  "_src": "composition.json"
+ },
+ {
+  "id": "gov-communication-porte",
+  "category": "ministres",
+  "mode": "auto",
+  "q": "Qui est le ministre de la Communication, porte-parole du gouvernement ?",
+  "expect_any": [
+   "Amadou Coulibaly"
+  ],
+  "_src": "composition.json"
+ },
+ {
+  "id": "gov-eaux-forets",
+  "category": "ministres",
+  "mode": "auto",
+  "q": "Qui est le ministre des Eaux et Forêts ?",
+  "expect_any": [
+   "Jacques Assahoré Konan"
+  ],
+  "_src": "composition.json"
+ },
+ {
+  "id": "gov-environnement-transition",
+  "category": "ministres",
+  "mode": "auto",
+  "q": "Qui est le ministre de l'Environnement et de la Transition écologique ?",
+  "expect_any": [
+   "Abou Bamba"
+  ],
+  "_src": "composition.json"
+ },
+ {
+  "id": "gov-tourisme",
+  "category": "ministres",
+  "mode": "auto",
+  "q": "Qui est le ministre du Tourisme ?",
+  "expect_any": [
+   "Siandou Fofana"
+  ],
+  "_src": "composition.json"
+ },
+ {
+  "id": "gov-plan-developpement",
+  "category": "ministres",
+  "mode": "auto",
+  "q": "Qui est le ministre du Plan et du Développement ?",
+  "expect_any": [
+   "Souleymane Diarrassouba"
+  ],
+  "_src": "composition.json"
+ },
+ {
+  "id": "gov-promotion-jeunesse",
+  "category": "ministres",
+  "mode": "auto",
+  "q": "Qui est le ministre de la Promotion de la jeunesse, de l'Insertion professionnelle et du Service civique ?",
+  "expect_any": [
+   "Mamadou Touré"
+  ],
+  "_src": "composition.json"
+ },
+ {
+  "id": "gov-enseignement-superieur",
+  "category": "ministres",
+  "mode": "auto",
+  "q": "Qui est le ministre de l'Enseignement supérieur et de la Recherche scientifique ?",
+  "expect_any": [
+   "Adama Diawara"
+  ],
+  "_src": "composition.json"
+ },
+ {
+  "id": "gov-cohesion-nationale",
+  "category": "ministres",
+  "mode": "auto",
+  "q": "Qui est le ministre de la Cohésion nationale et de la Solidarité ?",
+  "expect_any": [
+   "Belmonde Dogo"
+  ],
+  "_src": "composition.json"
+ },
+ {
+  "id": "gov-emploi-protection",
+  "category": "ministres",
+  "mode": "auto",
+  "q": "Qui est le ministre de l'Emploi et de la Protection sociale ?",
+  "expect_any": [
+   "Adama Kamara"
+  ],
+  "_src": "composition.json"
+ },
+ {
+  "id": "gov-femme-famille",
+  "category": "ministres",
+  "mode": "auto",
+  "q": "Qui est le ministre de la Femme, de la Famille et de l'Enfant ?",
+  "expect_any": [
+   "Nassénéba Touré"
+  ],
+  "_src": "composition.json"
+ },
+ {
+  "id": "gov-culture-francophonie",
+  "category": "ministres",
+  "mode": "auto",
+  "q": "Qui est le ministre de la Culture et de la Francophonie ?",
+  "expect_any": [
+   "Françoise Remarck"
+  ],
+  "_src": "composition.json"
+ },
+ {
+  "id": "gov-education-nationale",
+  "category": "ministres",
+  "mode": "auto",
+  "q": "Qui est le ministre de l'Éducation nationale et de l'Alphabétisation ?",
+  "expect_any": [
+   "Koffi N'Guessan"
+  ],
+  "_src": "composition.json"
+ },
+ {
+  "id": "gov-commerce-industrie",
+  "category": "ministres",
+  "mode": "auto",
+  "q": "Qui est le ministre du Commerce et de l'Industrie ?",
+  "expect_any": [
+   "Ibrahim Khalil Konaté"
+  ],
+  "_src": "composition.json"
+ },
+ {
+  "id": "gov-infrastructures-routes",
+  "category": "ministres",
+  "mode": "auto",
+  "q": "Qui est le ministre des Infrastructures et des Routes ?",
+  "expect_any": [
+   "Yacouba Hien Sié"
+  ],
+  "_src": "composition.json"
+ },
+ {
+  "id": "gov-transition-numerique",
+  "category": "ministres",
+  "mode": "auto",
+  "q": "Qui est le ministre de la Transition numérique et de l'Innovation technologique ?",
+  "expect_any": [
+   "Djibrill Ouattara"
+  ],
+  "_src": "composition.json"
+ },
+ {
+  "id": "gov-sports",
+  "category": "ministres",
+  "mode": "auto",
+  "q": "Qui est le ministre des Sports ?",
+  "expect_any": [
+   "Adjé Silas Metch"
+  ],
+  "_src": "composition.json"
+ },
+ {
+  "id": "gov-affaires-maritimes",
+  "category": "ministres",
+  "mode": "auto",
+  "q": "Qui est le ministre délégué chargé des Affaires maritimes ?",
+  "expect_any": [
+   "Célestin Serey Doh"
+  ],
+  "_src": "composition.json"
+ },
+ {
+  "id": "gov-integration-africaine",
+  "category": "ministres",
+  "mode": "auto",
+  "q": "Qui est le ministre délégué chargé de l'Intégration africaine ?",
+  "expect_any": [
+   "Adama Dosso"
+  ],
+  "_src": "composition.json"
+ },
+ {
+  "id": "gov-enseignement-technique",
+  "category": "ministres",
+  "mode": "auto",
+  "q": "Qui est le ministre délégué chargé de l'Enseignement technique et de la Formation professionnelle ?",
+  "expect_any": [
+   "Jean Louis Moulot"
+  ],
+  "_src": "composition.json"
+ },
+ {
+  "id": "gov-productions-vivrieres",
+  "category": "ministres",
+  "mode": "auto",
+  "q": "Qui est le ministre délégué chargé des Productions vivrières ?",
+  "expect_any": [
+   "Bernard Kini Comoé"
+  ],
+  "_src": "composition.json"
+ }
+]

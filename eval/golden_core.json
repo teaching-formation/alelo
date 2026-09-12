@@ -1,0 +1,41 @@
+[
+  { "id": "gov-count",          "category": "composition", "mode": "auto",   "q": "combien de membres compte le gouvernement de Côte d'Ivoire ?", "expect_all": ["34"] },
+  { "id": "gov-vicepm-count",   "category": "composition", "mode": "auto",   "q": "combien de vice-Premiers ministres y a-t-il dans le gouvernement ?", "expect_any": ["un seul", "uniquement un", "seul vice", "un vice premier ministre"], "forbid": ["deux vice premier", "2 vice premier"] },
+  { "id": "gov-vicepm-name",    "category": "composition", "mode": "auto",   "q": "qui est le vice-Premier ministre de Côte d'Ivoire ?", "expect_any": ["birahima"] },
+  { "id": "gov-etat-count",     "category": "composition", "mode": "auto",   "q": "combien de ministres d'État compte le gouvernement ?", "expect_any": ["deux", "2 ministres"] },
+  { "id": "gov-delegues-count", "category": "composition", "mode": "auto",   "q": "combien de ministres délégués compte le gouvernement ?", "expect_any": ["quatre", "4 ministres"] },
+  { "id": "gov-pm",             "category": "composition", "mode": "auto",   "q": "qui est le Premier ministre de Côte d'Ivoire ?", "expect_any": ["beugre mambe"] },
+  { "id": "gov-president",      "category": "composition", "mode": "auto",   "q": "qui est le président de la République de Côte d'Ivoire ?", "expect_any": ["alassane ouattara"] },
+  { "id": "gov-vp",             "category": "composition", "mode": "auto",   "q": "qui est le vice-président de la République ?", "expect_any": ["meyliet"] },
+
+  { "id": "route-passeport",    "category": "routage", "mode": "auto", "q": "quelle institution délivre le passeport ivoirien ?", "expect_any": ["snedai"] },
+  { "id": "route-cni",          "category": "routage", "mode": "auto", "q": "quelle institution délivre la carte nationale d'identité (CNI) en Côte d'Ivoire ?", "expect_any": ["oneci"] },
+  { "id": "route-entreprise",   "category": "routage", "mode": "auto", "q": "quelle structure permet de créer une entreprise en Côte d'Ivoire ?", "expect_any": ["cepici", "guichet unique"] },
+  { "id": "route-impots",       "category": "routage", "mode": "auto", "q": "où déclarer et payer ses impôts en ligne en Côte d'Ivoire ?", "expect_any": ["dgi", "e impots", "e-impots"] },
+  { "id": "route-passeport-doc","category": "routage", "mode": "auto", "q": "quels documents faut-il pour obtenir un passeport en Côte d'Ivoire ?", "expect_any": ["naissance", "photo", "identite", "nationalite"] },
+  { "id": "route-permis",       "category": "routage", "mode": "auto", "q": "comment obtenir un permis de conduire en Côte d'Ivoire ?", "expect_any": ["auto ecole", "code", "examen", "conduite", "transport"] },
+
+  { "id": "gk-ia",              "category": "culture_generale", "mode": "auto", "q": "explique simplement ce qu'est l'intelligence artificielle", "expect_any": ["apprentissage", "donnees", "machine", "modele", "algorithme", "ordinateur", "raisonnement", "imiter", "taches", "intelligence humaine", "systeme"] },
+  { "id": "gk-math",            "category": "culture_generale", "mode": "auto", "q": "combien font 15 % de 2000 ?", "expect_any": ["300"] },
+  { "id": "gk-capitale-pol",    "category": "culture_generale", "mode": "auto", "q": "quelle est la capitale politique de la Côte d'Ivoire ?", "expect_any": ["yamoussoukro"] },
+  { "id": "gk-capitale-eco",    "category": "culture_generale", "mode": "auto", "q": "quelle est la capitale économique de la Côte d'Ivoire ?", "expect_any": ["abidjan"] },
+  { "id": "gk-photosynthese",   "category": "culture_generale", "mode": "auto", "q": "explique la photosynthèse en une phrase", "expect_any": ["lumiere", "dioxyde", "carbone", "oxygene", "chlorophylle", "plante"] },
+
+  { "id": "lang-president-en",  "category": "langue", "mode": "auto", "q": "who is the president of Côte d'Ivoire?", "expect_any": ["ouattara"], "expect_lang": "en" },
+  { "id": "lang-passport-en",   "category": "langue", "mode": "auto", "q": "which institution issues the Ivorian passport?", "expect_any": ["snedai"], "expect_lang": "en" },
+  { "id": "lang-hello-en",      "category": "langue", "mode": "auto", "q": "hello, what can you help me with?", "expect_lang": "en" },
+  { "id": "lang-capital-en",    "category": "langue", "mode": "auto", "q": "what is the political capital of Côte d'Ivoire?", "expect_any": ["yamoussoukro"], "expect_lang": "en" },
+
+  { "id": "honest-fakeministry","category": "honnetete", "mode": "auto", "q": "qui est le ministre de la Conquête spatiale de la Côte d'Ivoire ?", "expect_any": ["n existe", "pas de ministre", "aucun", "je n ai pas", "ne dispose", "pas cette information", "ne figure"] },
+  { "id": "honest-fakeagency",  "category": "honnetete", "mode": "auto", "q": "qu'est-ce que l'Agence ivoirienne de téléportation quantique ?", "expect_any": ["ne connais", "n existe", "aucune", "pas cette information", "je n ai pas", "ne dispose", "pas d information"] },
+
+  { "id": "present-self",       "category": "presentation", "mode": "auto", "q": "présente-toi, qui es-tu ?", "expect_any": ["alelo"] },
+  { "id": "present-role",       "category": "presentation", "mode": "auto", "q": "à quoi sers-tu exactement ?", "expect_any": ["service", "public", "citoyen", "demarche", "administrat", "cote d ivoire"] },
+
+  { "id": "esquive-rural",      "category": "anti_esquive", "mode": "auto", "q": "quelles solutions numériques existent pour les zones rurales en Côte d'Ivoire ?", "expect_any": ["reseau", "internet", "couverture", "connect", "numerique", "acces", "mobile"] },
+  { "id": "esquive-famille",    "category": "anti_esquive", "mode": "auto", "q": "quelles actions concrètes mène le ministère de la Femme et de la Famille ?", "expect_any": ["femme", "enfant", "famille", "protection", "programme", "violence"] },
+
+  { "id": "exp-multivolet",     "category": "expert", "mode": "expert", "q": "quels documents faut-il pour un passeport, et qui est le ministre de l'Intérieur ?", "expect_all": [["snedai", "naissance", "photo", "nationalite", "passeport"], ["vagondo"]] },
+  { "id": "exp-compare",        "category": "expert", "mode": "expert", "q": "compare la CNI et le passeport : quelle institution délivre chacun ?", "expect_all": [["oneci"], ["snedai"]] },
+  { "id": "exp-cout-delai",     "category": "expert", "mode": "expert", "q": "quel est le coût et le délai d'obtention d'un passeport ?", "expect_any": ["fcfa", "franc", "jour", "semaine", "delai", "cout"] }
+]

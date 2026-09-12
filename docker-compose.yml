@@ -1,0 +1,39 @@
+services:
+
+  # ── API HTTP du RAG pour le front Next.js (chat SSE, transcribe, tts, config) ─
+  # Ollama + Voxtral + Reranker tournent en NATIF sur le Mac (GPU Metal).
+  # Le conteneur pointe vers host.docker.internal.
+  # (Les anciennes UIs Streamlit :8501 et orbe :8502 ont été retirées — remplacées
+  #  par le front Next.js dans web/. Leurs fichiers app.py / voice_app.py / voice_mode.html
+  #  restent dans le repo si besoin.)
+  api:
+    build: .
+    container_name: cgeci-api
+    command: >
+      uvicorn api:app --host 0.0.0.0 --port 8080
+    ports:
+      - "8088:8080"
+    environment:
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      - VOXTRAL_URL=http://host.docker.internal:8600
+      - RERANK_URL=http://host.docker.internal:8600
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+
+  # ── Front Next.js (interface ChatGPT) ──────────────────────────────────────
+  # NEXT_PUBLIC_API_URL est figé au build (appelé côté navigateur = localhost du poste).
+  web:
+    build:
+      context: ./web
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:8088
+    container_name: cgeci-web
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    restart: unless-stopped

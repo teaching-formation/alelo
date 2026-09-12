@@ -1,0 +1,34 @@
+# ── Python ───────────────────────────────────────────────
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.egg-info/
+
+# ── Node / Next.js ───────────────────────────────────────
+web/node_modules/
+web/.next/
+web/out/
+web/build/
+
+# ── Environnement ────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ── OS ───────────────────────────────────────────────────
+.DS_Store
+
+# ── Modèles téléchargés (volumineux, re-téléchargeables) ─
+models/
+
+# ── Données : on publie le CODE, pas la donnée ───────────
+# Tout data/ est ignoré, SAUF les artefacts curés petits & publics ci-dessous.
+/data/*
+!/data/knowledge_graph.json
+!/data/raw_gouvernement/
+# (data/chroma_db, data/raw_*/ scrapés, et data/*.jsonl privés restent exclus)
+
+# ── Divers ───────────────────────────────────────────────
+requirements 2.txt
+*.log

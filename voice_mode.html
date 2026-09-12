@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>CGECI.ai — Mode Vocal</title>
+<style>
+  :root{
+    --bg:#f7f8fc; --ink:#1a2436; --muted:#8a93a6;
+    --o1:#6b8cff; --o2:#a5b8ff; --o3:#e9eeff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    min-height:100vh; overflow:hidden; text-align:center; padding:24px;
+  }
+  .brand{position:fixed; top:22px; left:0; right:0; font-weight:700; letter-spacing:-.3px; font-size:1.05rem; color:var(--ink); opacity:.85}
+  .brand span:nth-child(2){color:#e67e22}
+  .scope{position:fixed; top:56px; left:0; right:0; display:flex; gap:8px; justify-content:center}
+  .scopeBtn{background:#fff; color:var(--muted); border:1px solid #e2e6ef; border-radius:20px;
+    padding:6px 14px; font-size:.82rem; font-weight:600; box-shadow:none}
+  .scopeBtn.active{background:var(--ink); color:#fff; border-color:var(--ink)}
+
+  /* ── Orbe ── */
+  .stage{position:relative; width:min(64vw,340px); aspect-ratio:1; display:flex; align-items:center; justify-content:center}
+  .orb{
+    position:absolute; inset:0; border-radius:50%;
+    background:
+      radial-gradient(120% 120% at 50% 18%, var(--o1) 0%, var(--o2) 38%, var(--o3) 72%, #ffffff 100%);
+    filter:blur(2px);
+    box-shadow:0 30px 90px -20px rgba(108,140,255,.55), inset 0 -20px 60px rgba(255,255,255,.6);
+    transition:transform .12s ease-out, filter .3s ease;
+    animation:breathe 6s ease-in-out infinite;
+    will-change:transform;
+  }
+  .orb::after{ /* reflet mouvant */
+    content:""; position:absolute; inset:6%; border-radius:50%;
+    background:radial-gradient(60% 45% at 40% 30%, rgba(255,255,255,.85), rgba(255,255,255,0) 60%);
+    mix-blend-mode:screen; animation:swirl 9s linear infinite;
+  }
+  .halo{
+    position:absolute; inset:-14%; border-radius:50%;
+    background:radial-gradient(circle, rgba(120,150,255,.28), rgba(120,150,255,0) 62%);
+    filter:blur(14px); opacity:.7; transition:opacity .3s, transform .12s;
+  }
+  @keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
+  @keyframes swirl{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+  body[data-state="thinking"] .orb{animation:breathe 1.6s ease-in-out infinite}
+  body[data-state="listening"] .orb{filter:blur(1px)}
+  body[data-state="speaking"] .halo{opacity:1}
+
+  /* ── Textes ── */
+  .status{margin-top:44px; font-size:1.02rem; color:var(--muted); min-height:1.4em; letter-spacing:.2px}
+  .subtitle{
+    margin-top:14px; max-width:640px; font-size:1.18rem; line-height:1.5; color:var(--ink);
+    min-height:1.5em; transition:opacity .2s;
+  }
+  .you{margin-top:16px; max-width:640px; font-size:.95rem; color:var(--muted); font-style:italic; min-height:1.2em}
+  .sources{margin-top:14px; max-width:640px; font-size:.82rem; color:var(--muted); line-height:1.5; min-height:1.1em}
+  .sources .badge{display:inline-block; background:#eaf1ff; color:#3a5bbf; border-radius:20px;
+    padding:3px 12px; font-weight:600; margin-bottom:6px}
+  .sources .doc{display:inline-block; background:#f1f3f8; border-radius:14px; padding:2px 10px; margin:3px 4px 0}
+
+  /* ── Contrôles ── */
+  .controls{position:fixed; bottom:40px; left:0; right:0; display:flex; gap:14px; justify-content:center; align-items:center}
+  button{
+    border:none; border-radius:30px; padding:15px 26px; font-size:1rem; font-weight:600;
+    cursor:pointer; transition:transform .1s, background .2s, box-shadow .2s;
+  }
+  button:active{transform:scale(.96)}
+  .primary{background:var(--ink); color:#fff; box-shadow:0 10px 24px -8px rgba(26,36,54,.5)}
+  .ghost{background:#fff; color:var(--ink); box-shadow:0 6px 18px -8px rgba(0,0,0,.25)}
+  .stop{background:#e74c3c; color:#fff}
+  .hidden{display:none!important}
+  .hint{position:fixed; bottom:104px; left:0; right:0; color:var(--muted); font-size:.82rem; opacity:.8}
+  a.back{position:fixed; top:20px; left:22px; color:var(--muted); text-decoration:none; font-size:.85rem; z-index:10}
+  a.back:hover{color:var(--ink)}
+</style>
+</head>
+<body data-state="idle">
+  <a class="back" id="backLink" href="http://localhost:8501">← Recherche &amp; Chat</a>
+  <div class="brand"><span>CGECI</span><span>.</span>ai — Mode Vocal</div>
+
+  <div class="scope" id="scope">
+    <button class="scopeBtn active" data-org="">🌍 Tout</button>
+    <button class="scopeBtn" data-org="ANSUT">📡 ANSUT</button>
+    <button class="scopeBtn" data-org="CGECI">🏢 CGECI</button>
+  </div>
+
+  <div class="stage">
+    <div class="halo" id="halo"></div>
+    <div class="orb" id="orb"></div>
+  </div>
+
+  <div class="status" id="status">Touchez pour démarrer la conversation</div>
+  <div class="you" id="you"></div>
+  <div class="subtitle" id="subtitle"></div>
+
+  <div class="hint" id="hint">Parlez naturellement — je détecte quand vous avez fini.</div>
+  <div class="controls">
+    <button class="primary" id="startBtn">🎙️  Démarrer</button>
+    <button class="stop hidden" id="stopBtn">⏹️  Terminer</button>
+  </div>
+
+<script>
+const $ = id => document.getElementById(id);
+const body = document.body;
+const orb = $('orb'), halo = $('halo');
+const statusEl = $('status'), subtitle = $('subtitle'), youEl = $('you');
+const startBtn = $('startBtn'), stopBtn = $('stopBtn'), hint = $('hint');
+
+let audioCtx, analyser, micStream, procNode, sourceNode;
+let recording = false, sessionActive = false;
+let recordedChunks = [];      // Float32 samples (mono, à ctx.sampleRate)
+let history = [];             // mémoire conversationnelle [{role, content}]
+let speaking = false;
+let scopeOrg = "";            // périmètre sélectionné ("" = Tout, "ANSUT", "CGECI")
+
+// Sélecteur de périmètre
+document.querySelectorAll('.scopeBtn').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('.scopeBtn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    scopeOrg = btn.dataset.org;
+  };
+});
+
+// Paramètres de détection de fin de parole (VAD simple par RMS)
+const START_RMS = 0.014;      // seuil pour considérer qu'on parle (plus sensible)
+const STOP_RMS  = 0.009;      // en dessous = silence
+const SILENCE_MS = 1400;      // durée de silence pour clôturer (tolère les pauses)
+const MIN_SPEECH_MS = 700;    // ne coupe pas avant d'avoir capté assez de parole
+const MAX_UTTER_MS = 15000;   // sécurité : coupe après 15 s
+let speechStarted = false, lastVoiceTime = 0, uttStart = 0, speechStart = 0;
+
+function setState(s, text){
+  body.dataset.state = s;
+  if(text !== undefined) statusEl.textContent = text;
+}
+
+// ── Animation de l'orbe pilotée par l'amplitude ────────────────────────────
+let animLevel = 0;
+function animate(){
+  let level = 0;
+  if(analyser){
+    const buf = new Uint8Array(analyser.frequencyBinCount);
+    analyser.getByteTimeDomainData(buf);
+    let sum = 0;
+    for(let i=0;i<buf.length;i++){ const v=(buf[i]-128)/128; sum += v*v; }
+    level = Math.sqrt(sum/buf.length);       // RMS 0..~1
+  }
+  animLevel += (level - animLevel) * 0.25;    // lissage
+  const scale = 1 + Math.min(animLevel*1.8, 0.35);
+  orb.style.transform = `scale(${scale.toFixed(3)})`;
+  halo.style.transform = `scale(${(1+animLevel*1.2).toFixed(3)})`;
+  requestAnimationFrame(animate);
+}
+
+// ── Encodage WAV 16 kHz mono depuis les samples capturés ───────────────────
+function downsample(buffer, inRate, outRate){
+  if(outRate === inRate) return buffer;
+  const ratio = inRate / outRate;
+  const outLen = Math.floor(buffer.length / ratio);
+  const out = new Float32Array(outLen);
+  for(let i=0;i<outLen;i++) out[i] = buffer[Math.floor(i*ratio)];
+  return out;
+}
+function encodeWav(samples, sampleRate){
+  const buf = new ArrayBuffer(44 + samples.length*2);
+  const view = new DataView(buf);
+  const w = (o,s)=>{ for(let i=0;i<s.length;i++) view.setUint8(o+i, s.charCodeAt(i)); };
+  w(0,'RIFF'); view.setUint32(4, 36+samples.length*2, true); w(8,'WAVE');
+  w(12,'fmt '); view.setUint32(16,16,true); view.setUint16(20,1,true);
+  view.setUint16(22,1,true); view.setUint32(24,sampleRate,true);
+  view.setUint32(28,sampleRate*2,true); view.setUint16(32,2,true); view.setUint16(34,16,true);
+  w(36,'data'); view.setUint32(40, samples.length*2, true);
+  let off=44;
+  for(let i=0;i<samples.length;i++){ let s=Math.max(-1,Math.min(1,samples[i])); view.setInt16(off, s<0?s*0x8000:s*0x7FFF, true); off+=2; }
+  return new Blob([view], {type:'audio/wav'});
+}
+
+// ── Capture d'un tour de parole ────────────────────────────────────────────
+async function startListening(){
+  if(!sessionActive) return;
+  recordedChunks = [];
+  speechStarted = false; lastVoiceTime = 0; uttStart = performance.now(); speechStart = 0;
+  recording = true;
+  setState('listening', 'Je vous écoute…');
+  youEl.textContent = ''; subtitle.textContent = '';
+}
+
+function handleAudioProcess(e){
+  if(!recording) return;
+  const input = e.inputBuffer.getChannelData(0);
+  recordedChunks.push(new Float32Array(input));
+
+  // niveau instantané
+  let sum=0; for(let i=0;i<input.length;i++) sum += input[i]*input[i];
+  const rms = Math.sqrt(sum/input.length);
+  const now = performance.now();
+
+  if(rms > START_RMS){
+    if(!speechStarted){ speechStarted = true; speechStart = now; }
+    lastVoiceTime = now;
+  }
+  const silenceFor = now - lastVoiceTime;
+  const spokeEnough = speechStarted && (now - speechStart) > MIN_SPEECH_MS;
+
+  if(spokeEnough && rms < STOP_RMS && silenceFor > SILENCE_MS){ finishTurn(); }
+  else if(now - uttStart > MAX_UTTER_MS && speechStarted){ finishTurn(); }
+}
+
+async function finishTurn(){
+  if(!recording) return;
+  recording = false;
+
+  // concatène les samples
+  let total = recordedChunks.reduce((n,c)=>n+c.length,0);
+  const merged = new Float32Array(total);
+  let off=0; for(const c of recordedChunks){ merged.set(c, off); off+=c.length; }
+  recordedChunks = [];
+
+  // Normalisation du niveau : boost si le micro est faible (meilleure transcription)
+  let peak = 0;
+  for(let i=0;i<merged.length;i++){ const a=Math.abs(merged[i]); if(a>peak) peak=a; }
+  if(peak > 0.001 && peak < 0.5){
+    const gain = Math.min(0.9/peak, 8);   // amplifie jusqu'à ~0.9 crête, max ×8
+    for(let i=0;i<merged.length;i++) merged[i] *= gain;
+  }
+
+  // Envoi au débit NATIF (pas de décimation naïve) → Voxtral rééchantillonne proprement.
+  const wav = encodeWav(merged, audioCtx.sampleRate);
+
+  setState('thinking', 'Réflexion…');
+  try{
+    const fd = new FormData();
+    fd.append('audio', wav, 'turn.wav');
+    fd.append('history', JSON.stringify(history));
+    fd.append('org', scopeOrg);
+    const r = await fetch('/voice', {method:'POST', body:fd});
+    const data = await r.json();
+
+    if(!data.transcript){
+      // rien compris → on réécoute
+      setState('listening', 'Je n’ai rien entendu… reparlez.');
+      if(sessionActive) startListening();
+      return;
+    }
+    youEl.textContent = '« ' + data.transcript + ' »';
+    history.push({role:'user', content:data.transcript});
+    history.push({role:'assistant', content:data.answer});
+    if(history.length > 12) history = history.slice(-12);
+
+    subtitle.textContent = data.answer;
+    if(data.audio){ await speak(data.audio); }
+  }catch(err){
+    setState('idle', 'Erreur : ' + err.message);
+  }
+  if(sessionActive) startListening();   // boucle continue
+}
+
+// ── Lecture de la réponse (orbe en mode "parle") ───────────────────────────
+function speak(b64){
+  return new Promise(resolve=>{
+    const bytes = atob(b64);
+    const arr = new Uint8Array(bytes.length);
+    for(let i=0;i<bytes.length;i++) arr[i]=bytes.charCodeAt(i);
+    const blob = new Blob([arr], {type:'audio/wav'});
+    const url = URL.createObjectURL(blob);
+    const el = new Audio(url);
+
+    // branche l'analyser sur la sortie pour animer l'orbe
+    try{
+      const src = audioCtx.createMediaElementSource(el);
+      src.connect(analyser); analyser.connect(audioCtx.destination);
+    }catch(e){ /* déjà branché */ }
+
+    speaking = true; setState('speaking', 'CGECI.ai répond…');
+    el.onended = ()=>{ speaking=false; URL.revokeObjectURL(url); resolve(); };
+    el.onerror = ()=>{ speaking=false; resolve(); };
+    el.play().catch(()=>resolve());
+  });
+}
+
+// ── Démarrage de session (geste utilisateur = autorise micro + audio) ──────
+async function beginSession(){
+  try{
+    micStream = await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true, noiseSuppression:true, autoGainControl:true}});
+  }catch(e){
+    setState('idle', '🎤 Micro refusé. Autorisez l’accès au microphone.');
+    return;
+  }
+  audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  if(audioCtx.state === 'suspended') await audioCtx.resume();
+  analyser = audioCtx.createAnalyser(); analyser.fftSize = 1024;
+  sourceNode = audioCtx.createMediaStreamSource(micStream);
+  procNode = audioCtx.createScriptProcessor(4096, 1, 1);
+  sourceNode.connect(analyser);
+  sourceNode.connect(procNode);
+  procNode.connect(audioCtx.destination);
+  procNode.onaudioprocess = handleAudioProcess;
+
+  sessionActive = true;
+  startBtn.classList.add('hidden'); stopBtn.classList.remove('hidden'); hint.classList.remove('hidden');
+  animate();
+  startListening();
+}
+
+function endSession(){
+  sessionActive = false; recording = false;
+  setState('idle', 'Conversation terminée. Touchez pour reprendre.');
+  stopBtn.classList.add('hidden'); startBtn.classList.remove('hidden');
+  try{ procNode.disconnect(); sourceNode.disconnect(); micStream.getTracks().forEach(t=>t.stop()); }catch(e){}
+  orb.style.transform=''; halo.style.transform='';
+}
+
+startBtn.onclick = beginSession;
+stopBtn.onclick = endSession;
+</script>
+</body>
+</html>
