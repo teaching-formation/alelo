@@ -160,6 +160,51 @@
   ]
  },
  {
+  "id": "route-nationalite",
+  "category": "routage",
+  "mode": "auto",
+  "q": "où obtenir un certificat de nationalité ivoirienne ?",
+  "expect_any": [
+   "tribunal",
+   "premiere instance",
+   "justice"
+  ]
+ },
+ {
+  "id": "route-casier",
+  "category": "routage",
+  "mode": "auto",
+  "q": "comment obtenir un extrait de casier judiciaire en Côte d'Ivoire ?",
+  "expect_any": [
+   "tribunal",
+   "premiere instance",
+   "greffe",
+   "justice"
+  ]
+ },
+ {
+  "id": "route-acte-mariage",
+  "category": "routage",
+  "mode": "auto",
+  "q": "où obtenir un extrait d'acte de mariage en Côte d'Ivoire ?",
+  "expect_any": [
+   "mairie",
+   "etat civil"
+  ]
+ },
+ {
+  "id": "route-carte-grise",
+  "category": "routage",
+  "mode": "auto",
+  "q": "où obtenir une carte grise en Côte d'Ivoire ?",
+  "expect_any": [
+   "guichet unique automobile",
+   "gua",
+   "transport",
+   "immatriculation"
+  ]
+ },
+ {
   "id": "gk-ia",
   "category": "culture_generale",
   "mode": "auto",

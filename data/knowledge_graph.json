@@ -1,35 +1,42 @@
 {
   "services": {
     "passeport": {
-      "service": "passeport",
-      "institution": null,
+      "service": "Passeport ordinaire",
+      "institution": "SNEDAI (production, concession de service public) ; délivrance par la Sûreté Nationale (Ministère de l'Intérieur et de la Sécurité). Pré-enrôlement sur monpasseport.ci.",
       "documents": [
-        "Une photo d’identité (photo récente)",
-        "L’extrait de naissance original",
-        "Une autorisation parentale légalisée à la mairie",
-        "Une copie et original de la CNI du parent qui donne l’autorisation",
-        "Le reçu de paiement des frais de passeport payé à ECOBANK / BACI ou les documents envoyés par e-mail suite au pré-enrôlement en ligne sur www.monpasseport.ci"
+        "Formulaire de demande rempli",
+        "1 photo d'identité récente",
+        "CNI en cours de validité (original + copie)",
+        "Extrait de naissance original",
+        "Reçu de paiement des 40 000 F CFA",
+        "Rendez-vous/pré-enrôlement sur monpasseport.ci"
       ],
-      "cout": "40.000F CFA",
-      "delai": "72 heures après validation par la police de l’air et des frontières en Côte d’Ivoire ( S/DPAF)",
+      "cout": "40 000 F CFA (dont 15 000 F de taxe fiscale), payable en banque (BACI/Ecobank/NSIA)",
+      "delai": "72 h après validation par la Police de l'Air et des Frontières (le retrait effectif peut être plus long)",
       "id": "passeport",
       "orgs": [
         "SNEDAI"
       ],
       "sources": [
         "https://snedai.com/passeport-en-cote-divoire/"
-      ]
+      ],
+      "ou": "Agences d'enrôlement (Plateau, Deux-Plateaux, Marcory, Yopougon) ; pré-enrôlement sur monpasseport.ci",
+      "note": null,
+      "verified_source": "https://news.abidjan.net/articles/727705",
+      "verified": true,
+      "verified_date": "2026-09-12"
     },
     "cni": {
-      "service": "cni",
-      "institution": "ONECI",
+      "service": "Carte Nationale d'Identité (CNI)",
+      "institution": "ONECI (Office National de l'État Civil et de l'Identification)",
       "documents": [
-        "reçu d’achat et le formulaire rempli",
-        "l’ancienne Carte Nationale d’Identité"
+        "Extrait ou copie intégrale d'acte de naissance de moins de 2 ans",
+        "Certificat de nationalité ivoirienne de moins de 2 ans (e-Justice)",
+        "Reçu du timbre d'enrôlement RNPP"
       ],
       "cout": "5 000 F CFA",
-      "delai": "Quarante-cinq (45) jours",
-      "ou": "(+225) 20 30 79 00 / 20 25 45 59 / 800 00 900",
+      "delai": null,
+      "ou": "Centres d'enrôlement ONECI",
       "id": "cni",
       "orgs": [
         "SERVICEPUBLIC"
@@ -38,18 +45,24 @@
         "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/209/38",
         "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/220/38",
         "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/207/38"
-      ]
+      ],
+      "note": "Délai officiel non fixé : le demandeur est prévenu par SMS. (Pas de délai « 45 jours ».)",
+      "verified_source": "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/205/38",
+      "verified": true,
+      "verified_date": "2026-09-12"
     },
     "permis_conduire": {
-      "service": "permis_conduire",
-      "institution": null,
+      "service": "Permis de conduire (1ère obtention)",
+      "institution": "Ministère des Transports — Centre de Gestion Intégrée (CGI) ; passage préalable par une auto-école agréée.",
       "documents": [
-        "Une photocopie lisible du document d’identification en cours de validité (présentation de l'original)",
-        "Un certificat de déclaration de perte en original du permis de conduire en cas de perte ou de vol ou l'original du permis de conduire détérioré",
-        "L'original de l'attestation de non retrait du permis de conduire en cas de déclaration de perte délivrée par l’Administration en charge du transport routier"
+        "Pièce d'identité valide (original)",
+        "Attestation de réussite à l'examen du code",
+        "Attestation de réussite à l'examen de conduite",
+        "Certificat médical d'aptitude à la conduite",
+        "Attestation d'enregistrement"
       ],
-      "cout": null,
-      "delai": null,
+      "cout": "23 500 F CFA (frais administratifs de délivrance ; hors formation en auto-école, ~80 000–150 000 F)",
+      "delai": "Au moins 1 mois",
       "id": "permis_conduire",
       "orgs": [
         "TRANSPORTS"
@@ -57,7 +70,12 @@
       "sources": [
         "https://transports.gouv.ci/sites/default/files/documents_d_identification_et_composition_de_dossiers.pdf",
         "https://transports.gouv.ci/sites/default/files/permis_de_conduire.pdf"
-      ]
+      ],
+      "ou": "Auto-école agréée, puis CGI / directions régionales (Min. des Transports)",
+      "note": null,
+      "verified_source": "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/2/160/24",
+      "verified": true,
+      "verified_date": "2026-09-12"
     },
     "acte_naissance": {
       "service": "Extrait / copie d'acte de naissance",
@@ -69,7 +87,7 @@
       "cout": "3 500 F CFA la copie si la demande est faite dans la même région que le lieu de retrait ; 5 000 F CFA si la région est différente",
       "delai": "24 heures (jusqu'à 48 heures en cas de difficultés techniques)",
       "ou": "Mairie (service de l'État Civil) ou Sous-Préfecture de la circonscription de naissance",
-      "note": "OBTENIR un extrait ≠ MODIFIER/RECTIFIER un acte (démarche distincte, avec décision de justice).",
+      "note": "OBTENIR un extrait et MODIFIER/RECTIFIER un acte sont DEUX démarches distinctes — ne pas les confondre.",
       "id": "acte_naissance",
       "orgs": [
         "SERVICEPUBLIC"
@@ -77,17 +95,20 @@
       "sources": [
         "https://cotedivoire.eregulations.org/procedure/103/105",
         "https://servicepublic.gouv.ci"
-      ]
+      ],
+      "verified": true,
+      "verified_date": "2026-09-12",
+      "verified_source": "https://cotedivoire.eregulations.org/procedure/103/105"
     },
     "certificat_nationalite": {
-      "service": "certificat_nationalite",
-      "institution": null,
+      "service": "Certificat de nationalité ivoirienne",
+      "institution": "Tribunal de Première Instance — Service des casiers judiciaires et certificats de nationalité (Min. de la Justice)",
       "documents": [
-        "Un formulaire de demande",
-        "Un certificat de nationalité ivoirienne ou à défaut la photocopie de la CNI d’un des parents de nationalité ivoirienne"
+        "Extrait d'acte de naissance de l'intéressé",
+        "Photocopie de la CNI de l'un des parents (nationalité par filiation)"
       ],
-      "cout": "2,500 F.CFA + 700 F.CFA de timbre fiscal",
-      "delai": "24H après le depot des dossiers",
+      "cout": "2 500 F CFA + timbre fiscal (total ~3 000 F selon le portail officiel ; certaines sources indiquent 3 500 F)",
+      "delai": "24 h après dépôt (portail officiel) ; ~72 h via la plateforme en ligne e-justice.ci",
       "id": "certificat_nationalite",
       "orgs": [
         "SERVICEPUBLIC"
@@ -96,18 +117,23 @@
         "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/42/141",
         "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/37/141",
         "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/573/13"
-      ]
+      ],
+      "ou": "Tribunal de Première Instance ; en ligne via e-justice.ci",
+      "note": null,
+      "verified_source": "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/573/13",
+      "verified": true,
+      "verified_date": "2026-09-12"
     },
     "casier_judiciaire": {
-      "service": "casier_judiciaire",
-      "institution": null,
+      "service": "Extrait de casier judiciaire (bulletin n°3)",
+      "institution": "Tribunal de Première Instance — Service des casiers judiciaires et certificats de nationalité (greffe)",
       "documents": [
-        "Idem que pour la naturalisation",
-        "A voir"
+        "Original de l'extrait d'acte de naissance",
+        "Indication de la situation matrimoniale, de la profession et de la ville de résidence"
       ],
-      "cout": "2,500 F.CFA + 500 F.CFA de timbre fiscal",
-      "delai": "24H après le depot des dossiers.",
-      "ou": "Service des casiers judiciaires et certificats de nationalité",
+      "cout": "2 500 F CFA (portail officiel)",
+      "delai": "24 h (portail officiel ; certaines sources indiquent plusieurs jours)",
+      "ou": "Tribunal du lieu de naissance ; en ligne via e-justice.ci",
       "id": "casier_judiciaire",
       "orgs": [
         "SERVICEPUBLIC"
@@ -116,7 +142,11 @@
         "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/402/157",
         "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/570/13",
         "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/573/13"
-      ]
+      ],
+      "note": null,
+      "verified_source": "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/81/61",
+      "verified": true,
+      "verified_date": "2026-09-12"
     },
     "carte_sejour": {
       "service": "carte_sejour",
@@ -138,17 +168,22 @@
         "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/212/38",
         "https://www.oneci.ci/nos-produits/carte-resident/documents-a-fournir"
       ],
-      "note": "Pour les étrangers hors CEDEAO séjournant plus de 3 mois, la carte de résident biométrique (ONECI) remplace l'ancien titre provisoire de séjour. Documents/coût exacts : voir oneci.ci."
+      "note": "Pour les étrangers hors CEDEAO séjournant plus de 3 mois, la carte de résident biométrique (ONECI) remplace l'ancien titre provisoire de séjour. Documents/coût exacts : voir oneci.ci.",
+      "verified": true,
+      "verified_date": "2026-09-12",
+      "verified_source": "https://www.oneci.ci/nos-produits/carte-resident/documents-a-fournir"
     },
     "acte_mariage": {
-      "service": "acte_mariage",
-      "institution": null,
+      "service": "Extrait / copie d'acte de mariage",
+      "institution": "Mairie — centre d'état civil du lieu de célébration du mariage",
       "documents": [
-        "Copie de l'acte sollicité ou les références"
+        "Livret de famille",
+        "Pièce d'identité du demandeur",
+        "Timbre municipal"
       ],
-      "cout": "3 500 F C",
-      "delai": null,
-      "ou": null,
+      "cout": "500 F CFA par copie (+ timbre municipal)",
+      "delai": "Environ 1 jour ouvrable",
+      "ou": "Mairie (état civil) du lieu de mariage",
       "id": "acte_mariage",
       "orgs": [
         "SERVICEPUBLIC"
@@ -157,18 +192,19 @@
         "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/300/1",
         "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/205/38",
         "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/573/13"
-      ]
+      ],
+      "note": null,
+      "verified_source": "https://cotedivoire.eregulations.org/procedure/104/106",
+      "verified": true,
+      "verified_date": "2026-09-12"
     },
     "creation_entreprise": {
-      "service": "creation_entreprise",
-      "institution": null,
-      "documents": [
-        "Une lettre de demande d'autorisation d’implantation d’une unité industrielle",
-        "Une attestation sur l’honneur d’obtention de l’autorisation administrative"
-      ],
+      "service": "Création / immatriculation d'entreprise",
+      "institution": "CEPICI — Guichet Unique des Formalités des Entreprises (GUFE)",
+      "documents": null,
       "cout": null,
-      "delai": null,
-      "ou": "CEPICI (Direction du Guichet Unique de l’investissement / Service Code des Investissements)",
+      "delai": "48 h (dossier complet)",
+      "ou": "CEPICI (guichet unique) ; en ligne",
       "id": "creation_entreprise",
       "orgs": [
         "CEPICI"
@@ -177,18 +213,21 @@
         "https://cepici.ci/admin/pdf/codeinvestir/1763741408.pdf",
         "https://cepici.ci/reforme",
         "https://cepici.ci/admin/pdf/codeinvestir/1763717243.pdf"
-      ]
+      ],
+      "note": "Le coût et les pièces varient selon la forme juridique (entreprise individuelle, SARL…) : voir cepici.gouv.ci. Ne pas confondre avec le permis d'implantation/exploitation (démarche distincte).",
+      "verified_source": "https://cotedivoire.eregulations.org/menu/1",
+      "verified": true,
+      "verified_date": "2026-09-12"
     },
     "impots": {
-      "service": "e-impots.gouv.ci",
-      "institution": "Direction Générale des Impôts de Côte d'Ivoire",
+      "service": "Déclaration et paiement des impôts en ligne",
+      "institution": "Direction Générale des Impôts (DGI) — plateforme e-impots.gouv.ci",
       "documents": [
         "Numéro de Compte Contribuable (NCC)",
-        "Numéro de Télédéclarant (NTD)",
-        "autorisation du mandataire social"
+        "Numéro de Télédéclarant (NTD) transmis par le centre des impôts"
       ],
-      "cout": null,
-      "delai": "10 minutes",
+      "cout": "Sans frais de plateforme (seul l'impôt dû est réglé)",
+      "delai": "Adhésion/activation du compte en quelques minutes",
       "id": "impots",
       "orgs": [
         "DGI"
@@ -197,32 +236,37 @@
         "https://e-impots.gouv.ci/",
         "https://e-impots.gouv.ci/index/login-expert-comptable",
         "https://e-impots.gouv.ci/guide/presentation-portail.pdf"
-      ]
+      ],
+      "ou": "En ligne sur e-impots.gouv.ci",
+      "note": null,
+      "verified_source": "https://e-impots.gouv.ci/",
+      "verified": true,
+      "verified_date": "2026-09-12"
     },
     "carte_grise": {
-      "service": "carte_grise",
-      "institution": null,
+      "service": "Carte grise (certificat d'immatriculation)",
+      "institution": "Guichet Unique Automobile (GUA), rattaché au Ministère des Transports (remplace l'ancien CGI depuis 2023)",
       "documents": [
-        "photocopie lisible du document d’identification en cours de validité",
-        "certificat de résidence dans la nouvelle région d’immatriculation",
-        "photocopie lisible de la vignette et du certificat de visite technique en cours de validité",
-        "photocopie de la facture CIE ou SODECI ou le certificat de residence",
-        "photocopie lisible du document approprié à son statut juridique",
-        "original du certificat de résidence",
-        "certificat de déclaration de perte en original en cas de perte ou de vol",
-        "procès verbal de constat de vol du véhicule (si applicable)",
-        "photocopie lisible de la carte grise ou un certificat de déclaration de perte"
+        "Pièce d'identité valide",
+        "Certificat de résidence",
+        "Facture / certificat de vente du concessionnaire (véhicule neuf)",
+        "Certificat de visite technique",
+        "Attestation d'assurance"
       ],
-      "cout": null,
-      "delai": null,
-      "ou": null,
+      "cout": "10 000 à 30 000 F CFA selon la puissance (moto ~10 000 ; < 16 CV ~25 000 ; ≥ 16 CV ~30 000)",
+      "delai": "Environ 1 jour (48–72 h en pratique)",
+      "ou": "Guichet Unique Automobile (Min. des Transports)",
       "id": "carte_grise",
       "orgs": [
         "TRANSPORTS"
       ],
       "sources": [
         "https://transports.gouv.ci/sites/default/files/documents_d_identification_et_composition_de_dossiers.pdf"
-      ]
+      ],
+      "note": null,
+      "verified_source": "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/153/24",
+      "verified": true,
+      "verified_date": "2026-09-12"
     },
     "carte_resident": {
       "service": "carte_resident",
@@ -245,7 +289,10 @@
         "https://www.oneci.ci/nos-produits/carte-resident/documents-a-fournir",
         "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/216/38"
       ],
-      "note": "Pour les étrangers hors CEDEAO séjournant plus de 3 mois, la carte de résident biométrique (ONECI) remplace l'ancien titre provisoire de séjour. Documents/coût exacts : voir oneci.ci."
+      "note": "Pour les étrangers hors CEDEAO séjournant plus de 3 mois, la carte de résident biométrique (ONECI) remplace l'ancien titre provisoire de séjour. Documents/coût exacts : voir oneci.ci.",
+      "verified": true,
+      "verified_date": "2026-09-12",
+      "verified_source": "https://www.oneci.ci/nos-produits/carte-resident/documents-a-fournir"
     }
   },
   "institutions": {
