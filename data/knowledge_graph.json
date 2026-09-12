@@ -60,26 +60,23 @@
       ]
     },
     "acte_naissance": {
-      "service": "acte_naissance",
-      "institution": "ONECI",
+      "service": "Extrait / copie d'acte de naissance",
+      "institution": "Mairie — service de l'État Civil du lieu (circonscription) de naissance. L'ONECI/RNPP exige souvent l'extrait pour d'autres démarches mais ne le délivre pas.",
       "documents": [
-        "L'original de l'extrait d'acte de naissance",
-        "La copie de la Carte Nationale d'Identité ou la fiche d'Identité délivrée par l'ONECI portant la mention à modifier",
-        "L'original de l'extrait d'acte de naissance des parents ou la copie de la CNI des parents",
-        "La quittance de Cinq Mille Francs (5000F) en ligne 'www.rnpp.ci'",
-        "Décision de Justice. (Certification d'individualité, grosse)"
+        "Une fiche de renseignements (nom, prénoms, date et lieu de naissance), OU une photocopie d'une pièce d'identité",
+        "Le cas échéant, une photocopie de l'extrait d'acte de naissance à recopier"
       ],
-      "cout": "5 000 F CFA",
-      "delai": "Quarante-cinq (45) jours",
-      "ou": "ONE",
+      "cout": "3 500 F CFA la copie si la demande est faite dans la même région que le lieu de retrait ; 5 000 F CFA si la région est différente",
+      "delai": "24 heures (jusqu'à 48 heures en cas de difficultés techniques)",
+      "ou": "Mairie (service de l'État Civil) ou Sous-Préfecture de la circonscription de naissance",
+      "note": "OBTENIR un extrait ≠ MODIFIER/RECTIFIER un acte (démarche distincte, avec décision de justice).",
       "id": "acte_naissance",
       "orgs": [
         "SERVICEPUBLIC"
       ],
       "sources": [
-        "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/207/38",
-        "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/570/13",
-        "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/211/38"
+        "https://cotedivoire.eregulations.org/procedure/103/105",
+        "https://servicepublic.gouv.ci"
       ]
     },
     "certificat_nationalite": {
@@ -123,23 +120,25 @@
     },
     "carte_sejour": {
       "service": "carte_sejour",
-      "institution": "Office National de l’État Civil (ONECI)",
+      "institution": "ONECI (Office National de l'État Civil et de l'Identification) — carte de résident biométrique pour étrangers, avec l'appui de la DGSN/Sûreté nationale (Ministère de l'Intérieur) ; enrôlement via prestataire agréé (VFS).",
       "documents": [
         "La copie du passeport et visa",
         "La photocopie du passeport et visa"
       ],
       "cout": null,
-      "delai": "Quarante-cinq (45) jours",
+      "delai": null,
       "ou": "Office National de l’État Civil (ONECI)",
       "id": "carte_sejour",
       "orgs": [
         "SERVICEPUBLIC"
       ],
       "sources": [
-        "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/214/38",
         "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/215/38",
-        "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/212/38"
-      ]
+        "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/214/38",
+        "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/212/38",
+        "https://www.oneci.ci/nos-produits/carte-resident/documents-a-fournir"
+      ],
+      "note": "Pour les étrangers hors CEDEAO séjournant plus de 3 mois, la carte de résident biométrique (ONECI) remplace l'ancien titre provisoire de séjour. Documents/coût exacts : voir oneci.ci."
     },
     "acte_mariage": {
       "service": "acte_mariage",
@@ -227,7 +226,7 @@
     },
     "carte_resident": {
       "service": "carte_resident",
-      "institution": "Office National de l'État Civil (ONECI)",
+      "institution": "ONECI (Office National de l'État Civil et de l'Identification) — carte de résident biométrique pour étrangers, avec l'appui de la DGSN/Sûreté nationale (Ministère de l'Intérieur) ; enrôlement via prestataire agréé (VFS).",
       "documents": [
         "La photocopie du passeport et du visa",
         "La copie de la carte de résident en cours de validité du père, ou de la mère ou du tuteur étranger",
@@ -235,16 +234,18 @@
         "La copie du registre de commerce et l'attestation de régularité fiscale du père ou de la mère ou du tuteur commerçant"
       ],
       "cout": null,
-      "delai": "non déterminé",
+      "delai": null,
       "id": "carte_resident",
       "orgs": [
         "SERVICEPUBLIC"
       ],
       "sources": [
+        "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/213/38",
         "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/214/38",
-        "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/216/38",
-        "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/213/38"
-      ]
+        "https://www.oneci.ci/nos-produits/carte-resident/documents-a-fournir",
+        "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/216/38"
+      ],
+      "note": "Pour les étrangers hors CEDEAO séjournant plus de 3 mois, la carte de résident biométrique (ONECI) remplace l'ancien titre provisoire de séjour. Documents/coût exacts : voir oneci.ci."
     }
   },
   "institutions": {

@@ -32,3 +32,7 @@ models/
 # ── Divers ───────────────────────────────────────────────
 requirements 2.txt
 *.log
+
+# ── Sorties de run du banc de test (générées, non versionnées) ─
+eval/report.md
+eval/last_run.json

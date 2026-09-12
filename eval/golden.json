@@ -145,6 +145,21 @@
   ]
  },
  {
+  "id": "route-acte-naissance",
+  "category": "routage",
+  "mode": "auto",
+  "q": "où obtenir un extrait d'acte de naissance en Côte d'Ivoire ?",
+  "expect_any": [
+   "mairie",
+   "etat civil",
+   "centre d etat civil",
+   "rnpp"
+  ],
+  "forbid": [
+   "decision de justice"
+  ]
+ },
+ {
   "id": "gk-ia",
   "category": "culture_generale",
   "mode": "auto",
