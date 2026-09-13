@@ -293,6 +293,220 @@
       "verified": true,
       "verified_date": "2026-09-12",
       "verified_source": "https://www.oneci.ci/nos-produits/carte-resident/documents-a-fournir"
+    },
+    "inst_cgeci": {
+      "id": "inst_cgeci",
+      "service": "CGECI (Confédération Générale des Entreprises de Côte d'Ivoire) — le patronat",
+      "role": "Organisation patronale faîtière qui représente et défend le secteur privé ivoirien et porte son dialogue avec l'État.",
+      "dirigeant": "Ahmed Cissé, Président (réélu en novembre 2025 pour un 2e mandat de 5 ans).",
+      "actions": [
+        "Plaidoyer et représentation du privé (fiscalité, réglementation, climat des affaires)",
+        "Commissions techniques sectorielles",
+        "CGECI Academy (forum économique annuel)",
+        "Accompagnement et formation des entreprises"
+      ],
+      "site": "cgeci.com",
+      "note": null,
+      "verified": true,
+      "verified_date": "2026-09-13",
+      "verified_source": "https://cgeci.com/president/"
+    },
+    "inst_cepici": {
+      "id": "inst_cepici",
+      "service": "CEPICI (Centre de Promotion des Investissements en Côte d'Ivoire)",
+      "role": "Guichet unique de l'investissement et de la création d'entreprise ; promotion et facilitation des investissements privés.",
+      "dirigeant": "Solange Amichia, Directrice Générale (depuis septembre 2021).",
+      "actions": [
+        "Création d'entreprise via le guichet unique (dématérialisé)",
+        "Promotion et accompagnement des investisseurs",
+        "Agrément au Code des investissements (avantages fiscaux/douaniers)",
+        "Identifiant unique / annuaire des entreprises"
+      ],
+      "site": "cepici.gouv.ci",
+      "note": null,
+      "verified": true,
+      "verified_date": "2026-09-13",
+      "verified_source": "https://cepici.gouv.ci"
+    },
+    "inst_guce": {
+      "id": "inst_guce",
+      "service": "GUCE (Guichet Unique du Commerce Extérieur)",
+      "role": "Portail unique et dématérialisé pour accomplir les formalités du commerce extérieur (import/export, transit). Société détenue à 100 % par l'État.",
+      "dirigeant": "Kitifolo Kignaman-Soro, Directeur Général (confirmé en 2025).",
+      "actions": [
+        "Formalités d'importation et d'exportation en ligne",
+        "Interconnexion douanes / banques / administrations",
+        "Dématérialisation et suivi des dossiers de dédouanement"
+      ],
+      "site": "guce.gouv.ci",
+      "note": null,
+      "verified": true,
+      "verified_date": "2026-09-13",
+      "verified_source": "https://guce.gouv.ci"
+    },
+    "inst_dgi": {
+      "id": "inst_dgi",
+      "service": "DGI (Direction Générale des Impôts)",
+      "role": "Administration chargée de l'assiette, du recouvrement et du contrôle de l'impôt, sous le Ministère des Finances et du Budget.",
+      "dirigeant": "Abou Sié Ouattara, Directeur Général (2026).",
+      "actions": [
+        "Télédéclaration et télépaiement via e-impots.gouv.ci",
+        "Immatriculation fiscale (NCC)",
+        "Contrôle fiscal et vérification",
+        "Délivrance d'attestations fiscales"
+      ],
+      "site": "dgi.gouv.ci",
+      "note": "Ne pas confondre le Directeur Général de la DGI avec le ministre chargé du Budget.",
+      "verified": true,
+      "verified_date": "2026-09-13",
+      "verified_source": "https://www.dgi.gouv.ci"
+    },
+    "inst_tresor": {
+      "id": "inst_tresor",
+      "service": "Trésor Public (Direction Générale du Trésor et de la Comptabilité Publique)",
+      "role": "Administration chargée de la comptabilité publique, de la trésorerie de l'État, du recouvrement des recettes non fiscales et du paiement des dépenses publiques.",
+      "dirigeant": "Arthur Ahoussi, Directeur Général (depuis mars 2024).",
+      "actions": [
+        "Exécution comptable du budget de l'État",
+        "Gestion de la trésorerie et de la dette",
+        "Recouvrement des recettes non fiscales",
+        "Paiement des dépenses publiques et des pensions"
+      ],
+      "site": "tresor.gouv.ci",
+      "note": null,
+      "verified": true,
+      "verified_date": "2026-09-13",
+      "verified_source": "https://www.tresor.gouv.ci"
+    },
+    "inst_igf": {
+      "id": "inst_igf",
+      "service": "IGF (Inspection Générale des Finances)",
+      "role": "Corps de contrôle a posteriori des finances publiques (régularité des procédures et des résultats), rattaché au ministre chargé des Finances.",
+      "dirigeant": null,
+      "actions": [
+        "Audits et contrôles a posteriori des administrations et entreprises publiques",
+        "Missions de vérification (fiscal, douanes, change)",
+        "Lutte contre la fraude et la corruption dans la gestion publique"
+      ],
+      "site": "igf.finances.gouv.ci",
+      "note": "Dirigée par un Inspecteur Général des Finances (nom actuel non vérifié — ne pas inventer).",
+      "verified": true,
+      "verified_date": "2026-09-13",
+      "verified_source": "https://www.igf.finances.gouv.ci"
+    },
+    "inst_ansut": {
+      "id": "inst_ansut",
+      "service": "ANSUT (Agence Nationale du Service Universel des Télécommunications)",
+      "role": "Agence d'État (tutelle : Ministère de la Transition Numérique) chargée du service universel des télécoms/TIC et de l'inclusion numérique (connectivité des zones mal desservies, haut débit).",
+      "dirigeant": "Gilles Thierry Beugré, Directeur Général (depuis avril 2022).",
+      "actions": [
+        "Programmes de service universel (zones mal desservies)",
+        "Déploiement d'infrastructures et de fibre optique (objectif +10 000 km d'ici 2030)",
+        "Financement des investissements de l'État en télécoms/TIC"
+      ],
+      "site": "ansut.ci",
+      "note": null,
+      "verified": true,
+      "verified_date": "2026-09-13",
+      "verified_source": "https://ansut.ci/equipe/"
+    },
+    "inst_sndi": {
+      "id": "inst_sndi",
+      "service": "SNDI (Société Nationale de Développement Informatique)",
+      "role": "Société d'État (100 %) fournissant à l'administration et aux entreprises des prestations informatiques : systèmes d'information, conseil, développement, infogérance, formation. Créée en 1999.",
+      "dirigeant": "Nongolougo Soro, Directeur Général.",
+      "actions": [
+        "Développement et maintenance des systèmes d'information de l'État",
+        "Infogérance et infrastructure informatique",
+        "Conseil IT, cloud et cybersécurité",
+        "Formation"
+      ],
+      "site": "sndi.ci",
+      "note": null,
+      "verified": true,
+      "verified_date": "2026-09-13",
+      "verified_source": "https://www.sndi.ci"
+    },
+    "inst_protection_donnees": {
+      "id": "inst_protection_donnees",
+      "service": "Protection des données personnelles (Autorité de protection)",
+      "role": "En Côte d'Ivoire, la protection des données à caractère personnel est assurée par l'ARTCI agissant comme « Autorité de protection » (loi n°2013-450 du 19 juin 2013). Il n'existe pas d'agence autonome « APDP ».",
+      "dirigeant": null,
+      "actions": [
+        "Enregistrement des traitements de données et des délégués (DPO)",
+        "Instruction des plaintes pour atteinte à la vie privée",
+        "Audits de conformité, avis et décisions réglementaires"
+      ],
+      "site": "autoritedeprotection.ci (ARTCI)",
+      "note": "« apdp.ci » n'existe pas comme agence autonome. Ne pas inventer de président de l'APDP ; la fonction est exercée par l'ARTCI.",
+      "verified": true,
+      "verified_date": "2026-09-13",
+      "verified_source": "https://www.autoritedeprotection.ci/"
+    },
+    "inst_agef": {
+      "id": "inst_agef",
+      "service": "AGEF (Agence de Gestion Foncière) — foncier urbain",
+      "role": "Agence chargée de constituer des réserves foncières pour l'État et les collectivités, d'aménager et de vendre des terrains urbains viabilisés. Créée en 1999.",
+      "dirigeant": null,
+      "actions": [
+        "Constitution de réserves foncières",
+        "Vente de terrains aménagés/viabilisés et de parcelles",
+        "Production des Arrêtés de Concession Définitive (ACD)"
+      ],
+      "site": "dgpe.gouv.ci/fr/entreprises/agef",
+      "note": "À NE PAS confondre avec l'AIGF (fréquences/télécoms). Le foncier RURAL relève de l'AFOR (agence distincte).",
+      "verified": true,
+      "verified_date": "2026-09-13",
+      "verified_source": "https://dgpe.gouv.ci/fr/entreprises/agef/"
+    },
+    "inst_aigf": {
+      "id": "inst_aigf",
+      "service": "AIGF (Agence Ivoirienne de Gestion des Fréquences)",
+      "role": "Agence chargée de la gestion et de la planification des fréquences radioélectriques (télécoms), créée en 2012. Ce N'EST PAS une agence foncière.",
+      "dirigeant": null,
+      "actions": [
+        "Gestion et attribution des fréquences radioélectriques",
+        "Planification du spectre",
+        "Contrôle de l'usage des fréquences"
+      ],
+      "site": "aigf.ci",
+      "note": "AIGF = fréquences/télécoms. Le FONCIER urbain relève de l'AGEF, pas de l'AIGF.",
+      "verified": true,
+      "verified_date": "2026-09-13",
+      "verified_source": "https://www.aigf.ci"
+    },
+    "inst_sgg": {
+      "id": "inst_sgg",
+      "service": "SGG (Secrétariat Général du Gouvernement)",
+      "role": "Administration qui coordonne l'action gouvernementale : prépare le Conseil des ministres, publie les textes au Journal Officiel, assure la liaison entre le Gouvernement et les Institutions.",
+      "dirigeant": "Roger Charlemagne Dah, Secrétaire Général du Gouvernement (depuis septembre 2022).",
+      "actions": [
+        "Préparation et suivi du Conseil des ministres",
+        "Publication des lois et décrets au Journal Officiel",
+        "Conservation des actes officiels et délivrance de copies certifiées"
+      ],
+      "site": "sgg.gouv.ci",
+      "note": null,
+      "verified": true,
+      "verified_date": "2026-09-13",
+      "verified_source": "https://web.sgg.gouv.ci/index.php/biographie-du-secretaire-general"
+    },
+    "inst_fer": {
+      "id": "inst_fer",
+      "service": "FER (Fonds d'Entretien Routier)",
+      "role": "Établissement public chargé de mobiliser et pérenniser le financement de l'entretien du réseau routier ivoirien. Créé en 2001.",
+      "dirigeant": "Annick Tohé Lasmel, Directrice Générale (confirmée en 2022).",
+      "actions": [
+        "Financement des travaux d'entretien routier",
+        "Exploitation des péages (badges, solde)",
+        "Gestion des gares de pesage",
+        "Financement de réhabilitations et de voiries"
+      ],
+      "site": "fer.ci",
+      "note": null,
+      "verified": true,
+      "verified_date": "2026-09-13",
+      "verified_source": "https://www.fer.ci"
     }
   },
   "institutions": {

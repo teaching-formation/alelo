@@ -655,8 +655,8 @@ INSTITUTIONS = {
                             "formalites entreprise", "registre de commerce"]},
     "GUCE":         {"label": "Guichet Unique du Commerce Extérieur", "theme": "Commerce",
                      "kw": ["commerce exterieur", "import", "export", "douane", "guce", "dedouanement"]},
-    "AIGF":         {"label": "AIGF (foncier)", "theme": "Foncier",
-                     "kw": ["foncier", "terrain", "titre foncier", "aigf", "gestion fonciere", "domaine"]},
+    "AIGF":         {"label": "Agence Ivoirienne de Gestion des Fréquences", "theme": "Numérique",
+                     "kw": ["aigf", "gestion des frequences", "frequences radio", "spectre radioelectrique"]},
     "APDP":         {"label": "Autorité de Protection des Données", "theme": "Données",
                      "kw": ["donnees personnelles", "donnee personnelle", "protection des donnees",
                             "vie privee", "apdp", "consentement"]},
@@ -1144,6 +1144,23 @@ _GRAPH_KW = {
     "impots": ["impot", "impots", "e-impots", "e impots", "declaration fiscale"],
     "carte_grise": ["carte grise", "immatriculation", "certificat d immatriculation"],
     "carte_resident": ["carte de resident"],
+    # ── Fiches INSTITUTIONS (audit vérifié 2026-09) ───────────────────────
+    "inst_cgeci": ["cgeci", "patronat"],
+    "inst_cepici": ["cepici"],
+    "inst_guce": ["guce", "guichet unique du commerce", "commerce exterieur"],
+    "inst_dgi": ["dgi", "direction generale des impots"],
+    "inst_tresor": ["tresor public", "tresor", "comptabilite publique"],
+    "inst_igf": ["igf", "inspection generale des finances"],
+    "inst_ansut": ["ansut", "service universel"],
+    "inst_sndi": ["sndi"],
+    "inst_protection_donnees": ["apdp", "protection des donnees", "donnees personnelles",
+                                "donnees a caractere personnel", "autorite de protection"],
+    "inst_agef": ["agef", "gestion fonciere", "reserve fonciere", "terrain viabilise",
+                  "concession definitive", "foncier urbain"],
+    "inst_aigf": ["aigf", "gestion des frequences", "frequences radio"],
+    "inst_sgg": ["sgg", "secretariat general du gouvernement", "secretaire general du gouvernement",
+                 "journal officiel"],
+    "inst_fer": ["fonds d entretien routier", "entretien routier", "peage"],
 }
 
 
@@ -1172,16 +1189,26 @@ def _fiche_context(fiches: list) -> str:
     """Formatte les fiches en contexte structuré faisant autorité."""
     blocks = []
     for f in fiches:
-        inst = f.get("institution") or (org_label(f.get("orgs", [None])[0]) if f.get("orgs") else "—")
-        b = [f"— {f.get('service') or f.get('id')} —", f"Institution/opérateur : {inst}"]
+        b = [f"— {f.get('service') or f.get('id')} —"]
+        inst = f.get("institution")
+        if inst:
+            b.append(f"Institution/opérateur : {inst}")
+        if f.get("role"):                       # fiche institution : mission
+            b.append(f"Rôle : {f['role']}")
+        if f.get("dirigeant"):                  # fiche institution : dirigeant daté
+            b.append(f"Dirigeant : {f['dirigeant']}")
         if f.get("documents"):
             b.append("Documents à fournir : " + " ; ".join(str(d) for d in f["documents"]))
+        if f.get("actions"):                    # fiche institution : services/actions
+            b.append("Services/actions : " + " ; ".join(str(a) for a in f["actions"]))
         if f.get("cout"):
             b.append(f"Coût : {f['cout']}")
         if f.get("delai"):
             b.append(f"Délai : {f['delai']}")
         if f.get("ou"):
             b.append(f"Où : {f['ou']}")
+        if f.get("site"):
+            b.append(f"Site officiel : {f['site']}")
         if f.get("note"):                       # caveat important (ex. « OBTENIR ≠ MODIFIER »)
             b.append(f"À noter : {f['note']}")
         if f.get("verified"):
