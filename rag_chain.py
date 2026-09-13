@@ -1221,6 +1221,31 @@ def _fiche_context(fiches: list) -> str:
             + "\n\n".join(blocks) + "\n\n")
 
 
+def _gov_composition_context(question: str) -> str:
+    """Injecte la composition COMPLÈTE et datée du gouvernement pour les questions ministérielles.
+
+    La composition est découpée en chunks à l'indexation : une question sur un ministère peut alors
+    remonter en tête un ministère PROCHE (ex. « Éducation nationale » pour « Enseignement supérieur »)
+    et donner le mauvais titulaire. On injecte donc la liste entière (~4 Ko, fait autorité) pour que
+    le modèle trouve le titulaire EXACT."""
+    q = _expand_abbrev(question)
+    if not (_is_officeholder_q(question)
+            and any(t in q for t in [" ministre", " ministere", "gouvernement", "premier ministre",
+                                     "vice premier", "president de la republique", "vice president"])):
+        return ""
+    try:
+        with open(os.path.join("data", "raw_gouvernement", "composition.json"), encoding="utf-8") as f:
+            content = json.load(f).get("content", "")
+    except Exception:
+        return ""
+    if not content:
+        return ""
+    return ("[COMPOSITION OFFICIELLE ET DATÉE DU GOUVERNEMENT — fait autorité. Identifie le titulaire "
+            "EXACT du ministère demandé dans cette liste ; ne confonds PAS deux ministères proches "
+            "(« Éducation nationale » ≠ « Enseignement supérieur et Recherche scientifique »).]\n"
+            + content + "\n\n")
+
+
 # ── Étape 4 agentique : AUTO-VÉRIFICATION de la réponse contre les sources ─────
 def _verify_answer(answer: str, context: str, model: str = LLM_MODEL) -> dict:
     """Relit la réponse : chaque fait précis (nom, montant, date, dispositif) est-il soutenu
@@ -1360,7 +1385,8 @@ def chat_stream(vectordb: Chroma, question: str, history: list[dict],
     if detail:
         yield {"step": "✍️ Synthèse des volets…" if decomposed else "✍️ Rédaction de la réponse…"}
 
-    context = graph_ctx + fresh + context
+    gov_ctx = _gov_composition_context(question)   # liste ministérielle complète si pertinent
+    context = gov_ctx + graph_ctx + fresh + context
     prompt = _build_chat_prompt(question, context, history, model, detail=detail)
     gen_opts = GEN_OPTIONS_DETAIL if detail else GEN_OPTIONS
 
