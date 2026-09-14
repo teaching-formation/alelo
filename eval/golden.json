@@ -264,7 +264,9 @@
    "beugre"
   ],
   "forbid": [
-   "pris fonction a cette date"
+   "pris fonction a cette date",
+   "verifiee le",
+   "fiche officielle verifiee"
   ]
  },
  {

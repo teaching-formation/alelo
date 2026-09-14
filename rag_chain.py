@@ -1235,9 +1235,8 @@ def _fiche_context(fiches: list) -> str:
             b.append(f"Site officiel : {f['site']}")
         if f.get("note"):                       # caveat important (ex. « OBTENIR ≠ MODIFIER »)
             b.append(f"À noter : {f['note']}")
-        if f.get("verified"):
-            d = f" le {f['verified_date']}" if f.get("verified_date") else ""
-            b.append(f"(Fiche VÉRIFIÉE{d} sur source officielle.)")
+        # NB : les champs verified/verified_date/verified_source servent à NOTRE suivi et ne sont
+        # PAS injectés — sinon le modèle recopie la date de vérification comme si c'était un fait.
         blocks.append("\n".join(b))
     return ("[FICHES OFFICIELLES — graphe de connaissances alélo. Ces données STRUCTURÉES font "
             "autorité : appuie-toi dessus en priorité. N'affirme un coût ou un délai QUE s'il "
