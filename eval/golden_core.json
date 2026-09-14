@@ -50,6 +50,7 @@
 
   { "id": "present-self",       "category": "presentation", "mode": "auto", "q": "présente-toi, qui es-tu ?", "expect_any": ["alelo"] },
   { "id": "present-role",       "category": "presentation", "mode": "auto", "q": "à quoi sers-tu exactement ?", "expect_any": ["service", "public", "citoyen", "demarche", "administrat", "cote d ivoire"] },
+  { "id": "social-wellbeing",   "category": "presentation", "mode": "auto", "q": "Allélo, comment est-ce que tu vas ?", "expect_any": ["je vais", "aider"], "forbid": ["behibro", "fidele"] },
 
   { "id": "esquive-rural",      "category": "anti_esquive", "mode": "auto", "q": "quelles solutions numériques existent pour les zones rurales en Côte d'Ivoire ?", "expect_any": ["reseau", "internet", "couverture", "connect", "numerique", "acces", "mobile"] },
   { "id": "esquive-famille",    "category": "anti_esquive", "mode": "auto", "q": "quelles actions concrètes mène le ministère de la Femme et de la Famille ?", "expect_any": ["femme", "enfant", "famille", "protection", "programme", "violence"] },

@@ -105,6 +105,7 @@ Règles :
 5ter. NE SALUE PAS à chaque réponse : « bonjour » et les formules d'accueil ne vont qu'au TOUT DÉBUT d'une conversation (premier message). En cours d'échange, va DIRECTEMENT à la réponse, sans « bonjour », sans re-présentation, sans politesse répétitive.
 6. Tu ES la source : tu as déjà rassemblé les informations publiques officielles de ces institutions. Ne renvoie donc JAMAIS le citoyen « consulter le site web » ou « contacter le service communication » pour obtenir une information — donne-lui directement ce que contiennent les documents. Termine plutôt par une ouverture PROACTIVE sur ce que tu peux fournir de plus, ex. : « Je peux te détailler chacune de ces actions », « Veux-tu la liste des démarches concrètes ? », « Je peux t'indiquer les pièces à fournir ». Ne donne un contact, une adresse ou un site externe QUE si c'est une étape réelle et nécessaire du parcours (déposer un dossier, prendre un rendez-vous physique, faire une téléprocédure précise) — et alors cite-la précisément d'après les documents, jamais comme formule d'esquive.
 7. Réponds dans la LANGUE de la question de l'utilisateur (français par défaut ; si la question est en anglais, réponds en anglais, etc.), de façon claire et CONCISE (5 à 8 phrases maximum), sans remplissage.
+8. Tu ne connais PAS le nom de l'utilisateur. Ne l'appelle JAMAIS par un nom propre (« M. X », « Madame Y »), et n'extrais JAMAIS un nom de personne des documents pour t'adresser à lui : les noms qui figurent dans les sources désignent des TIERS (responsables, agents, signataires…), jamais l'utilisateur. Adresse-toi à lui de manière neutre (« vous »), sans nom.
 
 Mieux vaut dire « je n'ai pas cette information » que de donner une réponse fausse."""
 
@@ -545,6 +546,12 @@ def _detect_social(question: str) -> str | None:
     if any(k in q for k in ["au revoir", "aurevoir", "bye", "a bientot",
                             "a plus", "ciao", "adieu", "bonne journee", "bonne soiree"]):
         return "bye"
+    # Bien-être : « comment ça va / comment vas-tu / comment est-ce que tu vas / how are you »
+    if (("comment" in q and any(k in q for k in ["tu vas", "vas tu", "ca va", "allez vous",
+                                                 "tu te sens", "ca se passe"]))
+            or any(k in q for k in ["tu vas bien", "vous allez bien", "how are you", "how are u",
+                                    "how do you do", "comment ca va"])):
+        return "wellbeing"
     # Remerciement (court)
     if n <= 4 and (words & _THANKS_WORDS):
         return "thanks"
@@ -559,6 +566,10 @@ def _social_response(kind: str) -> str:
     if kind == "greeting":
         return (f"Bonjour et bienvenue ! 👋 {ASSISTANT_SCOPE} "
                 "Dites-moi simplement ce dont vous avez besoin.")
+    if kind == "wellbeing":
+        return ("Je vais très bien, merci de demander ! 😊 Je suis là pour vous aider dans vos "
+                "démarches et vos questions sur les services publics ivoiriens. "
+                "Que puis-je faire pour vous ?")
     if kind == "thanks":
         return "Avec plaisir ! Puis-je vous aider sur autre chose ?"
     if kind == "bye":

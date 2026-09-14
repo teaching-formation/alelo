@@ -492,6 +492,20 @@
   ]
  },
  {
+  "id": "social-wellbeing",
+  "category": "presentation",
+  "mode": "auto",
+  "q": "Allélo, comment est-ce que tu vas ?",
+  "expect_any": [
+   "je vais",
+   "aider"
+  ],
+  "forbid": [
+   "behibro",
+   "fidele"
+  ]
+ },
+ {
   "id": "esquive-rural",
   "category": "anti_esquive",
   "mode": "auto",
