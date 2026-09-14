@@ -1,0 +1,30 @@
+# Contexte de build de l'image `api`. Exclut tout ce qui est volumineux ou monté au runtime
+# (data/ et models/ sont montés par docker-compose) → build rapide, image légère.
+
+# Volumineux / montés au runtime
+data/
+models/
+
+# Front (a sa propre image, contexte ./web)
+web/node_modules/
+web/.next/
+web/out/
+web/
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.egg-info/
+
+# Sorties de test / journaux
+eval/report.md
+eval/last_run.json
+*.log
+
+# Divers
+.git/
+.gitignore
+.DS_Store
+requirements 2.txt
