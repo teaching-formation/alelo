@@ -26,6 +26,7 @@
   { "id": "inst-dgi",     "category": "institutions", "mode": "auto", "q": "qui dirige la Direction Générale des Impôts (DGI) ?", "expect_any": ["abou sie", "abou sie ouattara"], "forbid": ["abdourahmane", "ministre du budget"] },
   { "id": "inst-tresor",  "category": "institutions", "mode": "auto", "q": "qui dirige le Trésor Public ivoirien ?", "expect_any": ["ahoussi"] },
   { "id": "inst-ansut",   "category": "institutions", "mode": "auto", "q": "qui dirige l'ANSUT ?", "expect_any": ["beugre"] },
+  { "id": "inst-ansut-long","category": "institutions", "mode": "auto", "q": "qui est le directeur général de l'Agence Nationale du Service Universel des Télécommunications ?", "expect_any": ["beugre"] },
   { "id": "inst-sndi",    "category": "institutions", "mode": "auto", "q": "qui dirige la SNDI ?", "expect_any": ["nongolougo"] },
   { "id": "inst-sgg",     "category": "institutions", "mode": "auto", "q": "qui est le Secrétaire Général du Gouvernement en Côte d'Ivoire ?", "expect_any": ["charlemagne dah", "roger charlemagne"] },
   { "id": "inst-fer",     "category": "institutions", "mode": "auto", "q": "qui dirige le FER (Fonds d'Entretien Routier) ?", "expect_any": ["tohe", "annick"] },

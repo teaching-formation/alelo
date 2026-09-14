@@ -265,6 +265,15 @@
   ]
  },
  {
+  "id": "inst-ansut-long",
+  "category": "institutions",
+  "mode": "auto",
+  "q": "qui est le directeur général de l'Agence Nationale du Service Universel des Télécommunications ?",
+  "expect_any": [
+   "beugre"
+  ]
+ },
+ {
   "id": "inst-sndi",
   "category": "institutions",
   "mode": "auto",
