@@ -260,7 +260,17 @@ async def crawl_all(
 
     # ignore_https_errors : certains sites gouv.ci ont des certificats invalides/expirés
     browser_cfg = BrowserConfig(headless=True, verbose=False, ignore_https_errors=True)
-    run_cfg = CrawlerRunConfig(cache_mode=CacheMode.BYPASS)
+    # Options de résilience : beaucoup de sites .gouv.ci ont un mur de cookies/une modale qui
+    # « cache le body » et fait échouer crawl4ai. magic + remove_overlay lèvent ces obstacles ;
+    # domcontentloaded + timeout élargi évitent d'attendre un networkidle qui n'arrive jamais.
+    run_cfg = CrawlerRunConfig(
+        cache_mode=CacheMode.BYPASS,
+        magic=True,
+        remove_overlay_elements=True,
+        page_timeout=45000,
+        wait_until="domcontentloaded",
+        delay_before_return_html=1.5,
+    )
 
     async with AsyncWebCrawler(config=browser_cfg) as crawler:
 
