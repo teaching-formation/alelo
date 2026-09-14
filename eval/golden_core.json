@@ -56,6 +56,7 @@
 
   { "id": "esquive-rural",      "category": "anti_esquive", "mode": "auto", "q": "quelles solutions numériques existent pour les zones rurales en Côte d'Ivoire ?", "expect_any": ["reseau", "internet", "couverture", "connect", "numerique", "acces", "mobile"] },
   { "id": "esquive-famille",    "category": "anti_esquive", "mode": "auto", "q": "quelles actions concrètes mène le ministère de la Femme et de la Famille ?", "expect_any": ["femme", "enfant", "famille", "protection", "programme", "violence"] },
+  { "id": "actions-numerique",  "category": "anti_esquive", "mode": "auto", "q": "quelles actions le ministre de la Transition Numérique a-t-il menées depuis sa nomination ?", "expect_any": ["padci", "projet", "digital", "numerique", "chantier", "visite", "accelerat", "feuille de route"], "forbid": ["aucune information", "je n ai pas d information"] },
 
   { "id": "exp-multivolet",     "category": "expert", "mode": "expert", "q": "quels documents faut-il pour un passeport, et qui est le ministre de l'Intérieur ?", "expect_all": [["snedai", "naissance", "photo", "nationalite", "passeport"], ["vagondo"]] },
   { "id": "exp-compare",        "category": "expert", "mode": "expert", "q": "compare la CNI et le passeport : quelle institution délivre chacun ?", "expect_all": [["oneci"], ["snedai"]] },

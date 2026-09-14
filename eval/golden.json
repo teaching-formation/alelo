@@ -558,6 +558,26 @@
   ]
  },
  {
+  "id": "actions-numerique",
+  "category": "anti_esquive",
+  "mode": "auto",
+  "q": "quelles actions le ministre de la Transition Numérique a-t-il menées depuis sa nomination ?",
+  "expect_any": [
+   "padci",
+   "projet",
+   "digital",
+   "numerique",
+   "chantier",
+   "visite",
+   "accelerat",
+   "feuille de route"
+  ],
+  "forbid": [
+   "aucune information",
+   "je n ai pas d information"
+  ]
+ },
+ {
   "id": "exp-multivolet",
   "category": "expert",
   "mode": "expert",

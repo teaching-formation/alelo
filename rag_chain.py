@@ -870,18 +870,32 @@ def _is_followup(question: str, org: str | None = None) -> bool:
     return bool(words & _FOLLOWUP_WORDS) and len(question.split()) < 12
 
 
+# Une question « actions / réalisations / projets / bilan » d'un responsable ou d'une institution
+# doit chercher les PROJETS de l'institution, pas la biographie de la personne.
+_ACTION_WORDS = ["action", "actions", "realisation", "realisations", "realise", "projet", "projets",
+                 "bilan", "mesure", "mesures", "initiative", "initiatives", "activite", "activites",
+                 "chantier", "chantiers", "reforme", "reformes", "a mene", "mene des", "a fait",
+                 "ont fait", "accompli", "qu a t il fait", "programme", "programmes"]
+
+
 def _build_search_query(question: str, history: list[dict], org: str | None = None) -> str:
     """
     Construit une requête de recherche autonome.
     Enrichit UNIQUEMENT les vraies suites anaphoriques ('et lui ?', 'précise').
     Une question avec un sujet clair reste telle quelle (pas de contamination).
+    Pour une question « actions/réalisations/projets », ajoute des termes orientés PROJETS afin
+    de remonter les initiatives de l'institution (et non la bio du responsable).
     """
     # Développe les abréviations (pr, ci, dg…) pour la recherche, sinon garde le texte tel quel.
     exp = _expand_abbrev(question)
     q = exp if exp != normalize(question) else question
 
+    boost = ""
+    if any(w in normalize(question) for w in _ACTION_WORDS):
+        boost = " projets programmes initiatives realisations chantiers reformes du ministere"
+
     if not history or not _is_followup(question, org):
-        return q
+        return q + boost
 
     # Ancre la recherche sur le SUJET précédent = la dernière question de l'utilisateur.
     # (On ignore la réponse de l'assistant : elle ajoute du bruit et peut être générique.)
@@ -891,8 +905,8 @@ def _build_search_query(question: str, history: list[dict], org: str | None = No
             last_user = msg["content"].strip()
             break
     if not last_user:
-        return q
-    return f"{last_user} {q}"
+        return q + boost
+    return f"{last_user} {q}" + boost
 
 
 _FR_STOP = {"le", "la", "les", "des", "un", "une", "est", "que", "qui", "pour", "comment",
