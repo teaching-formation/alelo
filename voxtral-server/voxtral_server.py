@@ -84,6 +84,65 @@ def _has_non_latin(text: str) -> bool:
     return len(_NON_LATIN.findall(text or "")) >= 3
 
 
+# ── Prétraitement audio (noise-canceling serveur) avant Whisper ────────────────
+SR = 16000   # Whisper attend du 16 kHz mono
+
+
+def _spectral_gate(audio, sr=SR, n_fft=1024, hop=256, reduction=0.5, floor=0.2):
+    """Débruitage spectral DOUX : estime le bruit stationnaire par bande (percentile bas dans le
+    temps) et atténue ce qui s'en approche — avec un PLANCHER de gain (jamais coupé à zéro) pour
+    ne pas abîmer la parole (voyelles tenues, sons soutenus)."""
+    from scipy.signal import stft, istft
+    if audio.size < n_fft:
+        return audio
+    f, t, Z = stft(audio, fs=sr, nperseg=n_fft, noverlap=n_fft - hop)
+    mag, phase = np.abs(Z), np.angle(Z)
+    noise = np.percentile(mag, 20, axis=1, keepdims=True)          # bruit stationnaire par bande
+    gain = np.clip((mag - reduction * 1.5 * noise) / (mag + 1e-8), floor, 1.0)
+    _, rec = istft(mag * gain * np.exp(1j * phase), fs=sr, nperseg=n_fft, noverlap=n_fft - hop)
+    return rec.astype(np.float32)[: len(audio)]
+
+
+def _trim_silence(audio, sr=SR, frame=1024, ratio=0.08):
+    """Coupe les silences de début/fin (réduit les hallucinations de Whisper sur le vide)."""
+    if audio.size < frame * 2:
+        return audio
+    n = audio.size // frame
+    energy = np.sqrt((audio[: n * frame].reshape(n, frame) ** 2).mean(axis=1))
+    peak = float(energy.max()) or 1.0
+    voiced = np.where(energy > ratio * peak)[0]
+    if voiced.size == 0:
+        return audio
+    start = max(int(voiced[0]) - 2, 0) * frame
+    end = min(int(voiced[-1]) + 3, n) * frame
+    return audio[start:end]
+
+
+def _preprocess(path: str):
+    """Charge (16 kHz mono) puis nettoie : passe-haut anti-rumble, débruitage spectral,
+    normalisation, coupe des silences. Renvoie un np.ndarray, ou None si l'audio est vide/trop
+    faible (dans ce cas on n'appelle PAS Whisper → pas d'hallucination sur du silence).
+    Tout échec ⇒ None (on retombera sur le fichier brut, jamais de crash)."""
+    import librosa
+    from scipy.signal import butter, sosfilt
+    audio, _ = librosa.load(path, sr=SR, mono=True)
+    audio = audio.astype(np.float32)
+    if audio.size < SR // 5:                                       # < 0,2 s
+        return None
+    audio = sosfilt(butter(4, 80, btype="highpass", fs=SR, output="sos"), audio).astype(np.float32)
+    audio = _trim_silence(audio)
+    if audio.size < SR // 5:                                       # < 0,2 s après coupe des silences
+        return None
+    # Décision « y a-t-il de la parole ? » sur le VRAI signal (avant débruitage) :
+    rms = float(np.sqrt(np.mean(audio ** 2)))
+    peak = float(np.max(np.abs(audio)))
+    if rms < 0.006 or peak < 0.01:                                 # quasi-silence/bruit de fond seul
+        return None
+    audio = _spectral_gate(audio)                                  # nettoyage doux
+    peak = float(np.max(np.abs(audio))) or 1.0
+    return (audio / peak * 0.95).astype(np.float32)                # normalisation
+
+
 def _warmup_stt():
     """Compile/charge Whisper sur du silence pour que la 1re vraie requête soit rapide."""
     print(f"⏳ Chargement de Whisper STT ({STT_MODEL})...")
@@ -136,7 +195,16 @@ async def transcribe(audio: UploadFile = File(...)):
     with tempfile.NamedTemporaryFile(suffix=".wav", delete=True) as f:
         f.write(data)
         f.flush()
-        r = _stt(f.name)                                  # auto-détection
+        # Noise-canceling serveur : nettoie l'audio avant Whisper. Si l'audio est vide/quasi-
+        # silencieux après nettoyage → on NE transcrit PAS (évite l'hallucination sur du vide).
+        try:
+            clean = _preprocess(f.name)
+        except Exception as e:
+            logging.getLogger("stt").warning("prétraitement audio ignoré : %s", e)
+            clean = f.name                                # repli : fichier brut
+        if clean is None:
+            return {"text": "", "language": "fr"}
+        r = _stt(clean)                                   # auto-détection
         lang = (r.get("language") or "").lower()
         text = (r.get("text") or "").strip()
         # L'app ne cible que le FR (primaire) et l'EN. On RE-TRANSCRIT en forçant le français si :
@@ -144,7 +212,7 @@ async def transcribe(audio: UploadFile = File(...)):
         # (b) le texte contient de l'écriture NON LATINE (cyrillique, CJK…) — signe typique d'une
         #     hallucination de Whisper sur un audio pauvre (ex. « Боже, помогите вам »).
         if lang not in ("fr", "en") or _has_non_latin(text):
-            r = _stt(f.name, language="fr")
+            r = _stt(clean, language="fr")
             lang = "fr"
             text = (r.get("text") or "").strip()
     return {"text": text, "language": lang}
