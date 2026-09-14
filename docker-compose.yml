@@ -18,8 +18,9 @@ services:
       - VOXTRAL_URL=http://host.docker.internal:8600
       - RERANK_URL=http://host.docker.internal:8600
     volumes:
-      - ./data:/app/data
-      - ./models:/app/models
+      # Code monté EN DIRECT → un changement de .py s'applique par `docker compose restart api`
+      # (~quelques s), SANS rebuild d'image. (data/ et models/ sont des sous-dossiers de `.`.)
+      - .:/app
     extra_hosts:
       - "host.docker.internal:host-gateway"
     restart: unless-stopped
