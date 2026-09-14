@@ -332,7 +332,7 @@
       "id": "inst_guce",
       "service": "GUCE (Guichet Unique du Commerce Extérieur)",
       "role": "Portail unique et dématérialisé pour accomplir les formalités du commerce extérieur (import/export, transit). Société détenue à 100 % par l'État.",
-      "dirigeant": "Kitifolo Kignaman-Soro, Directeur Général (confirmé en 2025).",
+      "dirigeant": "Kitifolo Kignaman-Soro, Directeur Général.",
       "actions": [
         "Formalités d'importation et d'exportation en ligne",
         "Interconnexion douanes / banques / administrations",
@@ -348,7 +348,7 @@
       "id": "inst_dgi",
       "service": "DGI (Direction Générale des Impôts)",
       "role": "Administration chargée de l'assiette, du recouvrement et du contrôle de l'impôt, sous le Ministère des Finances et du Budget.",
-      "dirigeant": "Abou Sié Ouattara, Directeur Général (2026).",
+      "dirigeant": "Abou Sié Ouattara, Directeur Général.",
       "actions": [
         "Télédéclaration et télépaiement via e-impots.gouv.ci",
         "Immatriculation fiscale (NCC)",
@@ -495,7 +495,7 @@
       "id": "inst_fer",
       "service": "FER (Fonds d'Entretien Routier)",
       "role": "Établissement public chargé de mobiliser et pérenniser le financement de l'entretien du réseau routier ivoirien. Créé en 2001.",
-      "dirigeant": "Annick Tohé Lasmel, Directrice Générale (confirmée en 2022).",
+      "dirigeant": "Annick Tohé Lasmel, Directrice Générale.",
       "actions": [
         "Financement des travaux d'entretien routier",
         "Exploitation des péages (badges, solde)",

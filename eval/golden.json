@@ -262,6 +262,9 @@
   "q": "qui dirige l'ANSUT ?",
   "expect_any": [
    "beugre"
+  ],
+  "forbid": [
+   "pris fonction a cette date"
   ]
  },
  {
@@ -512,6 +515,15 @@
   "forbid": [
    "behibro",
    "fidele"
+  ]
+ },
+ {
+  "id": "social-plus-question",
+  "category": "presentation",
+  "mode": "auto",
+  "q": "salut, comment est-ce que tu vas ? et qui dirige l'ANSUT ?",
+  "expect_any": [
+   "beugre"
   ]
  },
  {

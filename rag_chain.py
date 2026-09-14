@@ -527,6 +527,19 @@ ASSISTANT_SCOPE = os.getenv(
 _GREET_WORDS = {"bonjour", "bonsoir", "salut", "coucou", "hello", "hi", "hey",
                 "allo", "allô", "yo", "cc", "bjr"}
 _THANKS_WORDS = {"merci", "merci beaucoup", "thanks", "thank"}
+# Marqueurs d'une VRAIE question mêlée à la politesse (« bonjour, comment ça va, qui est le DG… »).
+# Si présents, on ne court-circuite PAS en réponse sociale : on laisse le RAG répondre.
+_QUESTION_MARKERS = [
+    "qui est", "qui dirige", "qui sont", "qui gere", "qui preside", "qui occupe",
+    "quel ", "quelle ", "quels ", "quelles ", "combien",
+    "comment obtenir", "comment faire pour", "comment creer", "comment payer",
+    "comment avoir", "comment demander", "comment ouvrir", "comment declarer",
+    "ou obtenir", "ou faire", "ou payer", "ou trouver", "ou s adresser",
+    "directeur", "ministre", "president de", "agence", "ministere",
+    "passeport", "carte nationale", " cni", "impot", "acte de", "permis",
+    "certificat", "casier", "entreprise", "nationalite", "carte grise",
+    "ansut", "cepici", "dgi", "tresor", "snedai", "oneci", "cgeci", "guce",
+]
 
 def _detect_social(question: str) -> str | None:
     """Retourne le type de message social, ou None si c'est une vraie question."""
@@ -542,6 +555,10 @@ def _detect_social(question: str) -> str | None:
         "comment tu marche", "tu es quoi", "presente toi", "presente-toi",
     ]):
         return "identity"
+
+    # Une VRAIE question est mêlée à la politesse → ne pas court-circuiter, laisser le RAG répondre.
+    if any(m in q for m in _QUESTION_MARKERS):
+        return None
     # Au revoir
     if any(k in q for k in ["au revoir", "aurevoir", "bye", "a bientot",
                             "a plus", "ciao", "adieu", "bonne journee", "bonne soiree"]):
@@ -1105,23 +1122,18 @@ def _is_officeholder_q(question: str) -> bool:
 
 
 def _freshness_directive(docs) -> str:
-    """Directive forte : dater le titulaire + prévenir qu'il a pu changer."""
-    # Indice de date : on ne garde qu'une date récente plausible (année 2010+), pour éviter
-    # de prendre par ex. une année de naissance dans une biographie.
-    recent = ""
-    for d in (_extract_date(x) for x in docs):
-        m = re.search(r"20[1-9]\d", d) if d else None
-        if m:
-            recent = f" (source datée d'environ {m.group(0)})"
-            break
-    return ("[OUTIL FRAÎCHEUR — fonction nominative] Le titulaire d'un poste change avec le temps. "
-            f"Appuie-toi sur le document LE PLUS RÉCENT{recent}, DATE ta réponse et précise qu'elle a "
-            "pu changer depuis. Si les documents ne donnent PAS le nom mais qu'il s'agit d'une fonction "
-            "NOTOIRE (président de la République, Premier ministre, chef de l'État), donne quand même ta "
-            "MEILLEURE connaissance en la datant clairement et en signalant qu'elle peut avoir évolué. "
-            "NE REFUSE PAS et ne renvoie JAMAIS vers un site externe ou un « service communication ». "
-            "NE CONFONDS PAS la date de NAISSANCE d'une personne avec la date de la source ou de sa "
-            "prise de fonction.\n\n")
+    """Directive : donner le titulaire, prévenir qu'il a pu changer, SANS confondre la date d'un
+    document avec une date de nomination (source d'hallucination fréquente)."""
+    return ("[OUTIL FRAÎCHEUR — fonction nominative] Le titulaire d'un poste peut changer avec le temps. "
+            "Donne le nom d'après les sources ci-dessus (ou, pour une fonction NOTOIRE — président de la "
+            "République, Premier ministre, chef de l'État —, ta MEILLEURE connaissance), et signale "
+            "brièvement que l'information a pu évoluer depuis. NE REFUSE PAS et ne renvoie JAMAIS vers un "
+            "site externe ou un « service communication ».\n"
+            "RÈGLE DE DATE STRICTE : n'indique une date de PRISE DE FONCTION / de nomination QUE si une "
+            "source l'écrit explicitement comme telle (ex. « en fonction depuis avril 2022 »). La date à "
+            "laquelle un DOCUMENT a été publié, et une date de naissance, NE SONT PAS des dates de prise de "
+            "fonction : ne les présente jamais ainsi. N'écris JAMAIS « il a pris fonction à cette date » en "
+            "te basant sur la date d'un document, et n'invente aucune date de nomination.\n\n")
 
 
 def _log_freshness(question: str, docs) -> None:
@@ -1391,8 +1403,12 @@ def chat_stream(vectordb: Chroma, question: str, history: list[dict],
             _log_freshness(question, docs)
         fresh = _freshness_directive(docs)                    # directive en Auto ET Expert
 
+    # Si une FICHE VÉRIFIÉE donne déjà le dirigeant, elle fait autorité pour une question nominative :
+    # on n'y mêle PAS le corpus brut (ses dates parasites deviennent des « pris fonction le … » faux).
+    fiche_gives_dirigeant = _is_officeholder_q(question) and any(f.get("dirigeant") for f in fiches)
+
     if context is None:                                       # chemin simple (Auto ou corrective)
-        context = _build_context(docs)
+        context = "" if fiche_gives_dirigeant else _build_context(docs)
 
     if detail:
         yield {"step": "✍️ Synthèse des volets…" if decomposed else "✍️ Rédaction de la réponse…"}
