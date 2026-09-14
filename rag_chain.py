@@ -892,7 +892,8 @@ def _build_search_query(question: str, history: list[dict], org: str | None = No
 
     boost = ""
     if any(w in normalize(question) for w in _ACTION_WORDS):
-        boost = " projets programmes initiatives realisations chantiers reformes du ministere"
+        # Termes neutres (marchent pour un ministère, une agence, une direction, un DG/DGA…).
+        boost = " projets programmes initiatives realisations chantiers reformes activites bilan mesures"
 
     if not history or not _is_followup(question, org):
         return q + boost
