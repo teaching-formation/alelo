@@ -178,16 +178,14 @@ def _gen_document(db, req, doc_req):
 
     formats = doc_req.get("formats") or [doc_req.get("format", "pdf")]
     # 1) Contenu (généré UNE fois) : soit la dernière réponse (« mets ça en PDF »), soit une réponse fraîche.
-    body, topic = "", doc_req.get("topic") or req.message
+    # `topic` = titre fourni par le modèle (tool-call) ; à défaut, la question précédente.
+    body, topic = "", (doc_req.get("topic") or "").strip()
     if doc_req.get("refers_prior"):
-        # Corps = dernière réponse de l'assistant ; titre = dernière QUESTION de l'utilisateur
-        # (« met ces infos en PDF » → le sujet est la question précédente, pas la commande).
         body = next((m["content"] for m in reversed(req.history or [])
                      if m.get("role") == "assistant" and m.get("content", "").strip()), "")
-        prior_q = next((m["content"] for m in reversed(req.history or [])
-                        if m.get("role") == "user" and m.get("content", "").strip()), "")
-        if prior_q:
-            topic = prior_q
+        if not topic:                      # pas de titre du modèle → sujet = question précédente
+            topic = next((m["content"] for m in reversed(req.history or [])
+                          if m.get("role") == "user" and m.get("content", "").strip()), "")
     if not body:
         res = rag_chat(db, topic or req.message, history=req.history, detail=True)
         body = res.get("answer", "")
@@ -229,7 +227,19 @@ def chat(req: ChatReq):
     model = expert_model() if detail else "alelo"
     org = (req.org or None) if req.mode == "expert" else None
 
-    doc_req = detect_doc_request(req.message)
+    # Demande de document : regex = pré-filtre rapide ; puis le MODÈLE décide (tool-calling)
+    # et extrait formats/titre/source. Repli sur la regex si le modèle échoue mais qu'un format
+    # est cité explicitement. (Fini l'extraction fragile « ces informations / mets ça… ».)
+    from rag_chain import llm_doc_request
+    doc_req = None
+    _hint = detect_doc_request(req.message)
+    if _hint:
+        _args = llm_doc_request(req.message, req.history, model="alelo")
+        if _args:
+            doc_req = {"formats": _args["formats"], "topic": _args["titre"],
+                       "refers_prior": _args["source"] == "reponse_precedente"}
+        elif _hint.get("explicit"):
+            doc_req = _hint
 
     # ── Observabilité locale (tracing.py) : une trace par requête ────────────
     trace_id = tracing.new_id()

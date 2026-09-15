@@ -638,7 +638,55 @@ def detect_doc_request(question: str) -> dict | None:
                    r"stp|document|fichier|rapport|r[ée]capitulatif|cette|ces|information[s]?|aussi|et|ca|"
                    r"pdf|word|excel|tableur|classeur|docx|xlsx)\b", " ", topic)
     topic = re.sub(r"\s+", " ", topic).strip(" .,:;-")
-    return {"formats": formats, "format": formats[0], "refers_prior": refers_prior, "topic": topic}
+    explicit = any(k in q for kws in _DOC_FORMAT_KW.values() for k in kws)   # format cité explicitement ?
+    return {"formats": formats, "format": formats[0], "refers_prior": refers_prior,
+            "topic": topic, "explicit": explicit}
+
+
+# ── Décision par le MODÈLE (tool-calling) : remplace l'extraction fragile par regex ────────────
+_DOC_TOOL = [{"type": "function", "function": {
+    "name": "generer_document",
+    "description": ("Génère un ou plusieurs documents téléchargeables (PDF, Word, Excel) pour "
+                    "l'utilisateur. À appeler UNIQUEMENT quand l'utilisateur demande de créer, "
+                    "générer, exporter ou « mettre dans » un fichier/document."),
+    "parameters": {"type": "object", "properties": {
+        "formats": {"type": "array", "items": {"type": "string", "enum": ["pdf", "docx", "xlsx"]},
+                    "description": "TOUS les formats demandés (« pdf et excel » → [\"pdf\",\"xlsx\"])."},
+        "titre": {"type": "string",
+                  "description": "Titre court et clair tiré du SUJET (ex. « Obtention d'un passeport »)."},
+        "source": {"type": "string", "enum": ["reponse_precedente", "nouvelle_recherche"],
+                   "description": ("« reponse_precedente » si le contenu à mettre dans le document est "
+                                   "la réponse DÉJÀ donnée juste avant (« mets ça / ces informations en "
+                                   "pdf ») ; « nouvelle_recherche » pour un document sur un sujet neuf.")}},
+        "required": ["formats", "titre", "source"]}}}]
+
+
+def llm_doc_request(question: str, history: list, model: str = LLM_MODEL) -> dict | None:
+    """Le modèle décide (tool-calling) si l'utilisateur veut un document et extrait
+    formats/titre/source. Retourne {formats, titre, source} ou None (pas une demande de doc,
+    ou échec → l'appelant retombe sur la détection regex)."""
+    msgs = [{"role": m.get("role"), "content": m.get("content", "")}
+            for m in (history or []) if m.get("role") in ("user", "assistant") and m.get("content")]
+    msgs.append({"role": "user", "content": question})
+    try:
+        base = os.getenv("OLLAMA_BASE_URL", OLLAMA_BASE_URL)
+        r = requests.post(f"{base}/api/chat",
+                          json={"model": model, "stream": False, "messages": msgs[-12:],
+                                "tools": _DOC_TOOL, "keep_alive": KEEP_ALIVE,
+                                "options": {"temperature": 0}},
+                          timeout=45)
+        r.raise_for_status()
+        tcs = (r.json().get("message") or {}).get("tool_calls") or []
+    except Exception:
+        return None
+    for tc in tcs:
+        fn = tc.get("function") or {}
+        if fn.get("name") == "generer_document":
+            args = fn.get("arguments") or {}
+            fmts = [f for f in (args.get("formats") or []) if f in ("pdf", "docx", "xlsx")] or ["pdf"]
+            return {"formats": fmts, "titre": (args.get("titre") or "").strip(),
+                    "source": args.get("source") or "nouvelle_recherche"}
+    return None
 
 
 def doc_title(topic: str) -> str:
