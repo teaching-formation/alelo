@@ -176,8 +176,8 @@ def _gen_document(db, req, doc_req):
     import documents
     from rag_chain import chat as rag_chat, doc_title, _detect_lang
 
-    fmt = doc_req["format"]
-    # 1) Contenu : soit la dernière réponse (« mets ça en PDF »), soit une réponse fraîche détaillée.
+    formats = doc_req.get("formats") or [doc_req.get("format", "pdf")]
+    # 1) Contenu (généré UNE fois) : soit la dernière réponse (« mets ça en PDF »), soit une réponse fraîche.
     body, topic = "", doc_req.get("topic") or req.message
     if doc_req.get("refers_prior"):
         body = next((m["content"] for m in reversed(req.history or [])
@@ -189,21 +189,25 @@ def _gen_document(db, req, doc_req):
             topic = req.message
     title = doc_title(topic)
 
-    # 2) Fichier
-    info = documents.generate(fmt, title, body)
+    # 2) Un fichier PAR format demandé
+    docs_out = []
+    for fmt in formats:
+        info = documents.generate(fmt, title, body)
+        docs_out.append({"id": info["id"], "filename": info["filename"], "format": fmt,
+                         "label": info["label"], "url": f"/api/download/{info['id']}"})
 
-    # 3) Message de confirmation (dans la langue de l'utilisateur) + streaming pour l'animation/voix
+    # 3) Message de confirmation (langue de l'utilisateur) + streaming pour l'animation/voix
     en = _detect_lang(req.message) == "en"
+    labels = (" and " if en else " et ").join(d["label"] for d in docs_out)
     if en:
-        confirm = f"Done ✅ I've prepared your {info['label']} document “{title}”. You can download it just below."
+        confirm = f"Done ✅ I've prepared your {labels} document(s) “{title}”. You can download them just below."
     else:
-        confirm = f"C'est prêt ✅ J'ai préparé ton document {info['label']} « {title} ». Tu peux le télécharger juste en dessous."
+        confirm = f"C'est prêt ✅ J'ai préparé ton document {labels} « {title} ». Tu peux le télécharger juste en dessous."
     for word in confirm.split(" "):
         yield _sse({"type": "token", "text": word + " "})
 
-    document = {"id": info["id"], "filename": info["filename"], "format": fmt,
-                "label": info["label"], "url": f"/api/download/{info['id']}"}
-    yield _sse({"type": "done", "answer": confirm, "sources": [], "document": document})
+    yield _sse({"type": "done", "answer": confirm, "sources": [],
+                "document": docs_out[0], "documents": docs_out})
 
 
 @app.post("/api/chat")

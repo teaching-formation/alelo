@@ -49,7 +49,9 @@ ALLOWED_ORGS = {"ANSUT", "CGECI", "SERVICEPUBLIC", "PRIMATURE", "SNDI",
                 # SNEDAI — opérateur officiel des passeports (comble le trou passeport)
                 "SNEDAI",
                 # Composition officielle du gouvernement (président, PM, tous les ministres, datée)
-                "GOUVERNEMENT"}
+                "GOUVERNEMENT",
+                # Vague 4 : ministères manquants (scrape Playwright 2026-09)
+                "SANTE", "AGRICULTURE", "JUSTICE", "INTERIEUR", "EDUCATION", "ENERGIE", "COMMERCE"}
 INDEX_ORG = os.getenv("INDEX_ORG", "").strip().upper()
 if INDEX_ORG and INDEX_ORG not in ALLOWED_ORGS:
     raise SystemExit(f"INDEX_ORG='{INDEX_ORG}' invalide. Autorisés : {sorted(ALLOWED_ORGS)}")

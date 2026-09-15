@@ -616,22 +616,26 @@ _DOC_PRIOR = ["de ca", "ce que tu", "ce que vous", "notre echange", "notre conve
 
 
 def detect_doc_request(question: str) -> dict | None:
-    """Détecte « crée-moi un PDF/Word/Excel … ». Retourne {format, refers_prior, topic} ou None."""
+    """Détecte « crée-moi un PDF/Word/Excel … ». Retourne {formats, format, refers_prior, topic} ou None.
+    `formats` = TOUS les formats demandés (« pdf ET excel » → ['pdf','xlsx'])."""
     q = normalize(question)
-    fmt = next((f for f, kws in _DOC_FORMAT_KW.items() if any(k in q for k in kws)), None)
+    formats = [f for f, kws in _DOC_FORMAT_KW.items() if any(k in q for k in kws)]
     has_verb = any(v in q for v in _DOC_VERBS)
     has_noun = any(n in q for n in _DOC_NOUNS)
     # Déclenché si : un format explicite est cité, OU (un verbe de création + un nom de doc).
-    if not fmt and not (has_verb and has_noun):
+    if not formats and not (has_verb and has_noun):
         return None
+    if not formats:
+        formats = ["pdf"]
     refers_prior = any(k in q for k in _DOC_PRIOR)
     # Sujet = question nettoyée des mots de commande (pour le titre + la recherche).
     topic = question
-    topic = re.sub(r"(?i)\b(cr[ée]e[- ]?(moi|nous)?|g[ée]n[èe]re|fais[- ]?(moi)?|pr[ée]pare|r[ée]dige|"
-                   r"mets|exporte|un|une|le|la|en|au format|s'?il te pla[îi]t|stp|document|fichier|"
-                   r"rapport|r[ée]capitulatif|pdf|word|excel|tableur|docx|xlsx)\b", " ", topic)
+    topic = re.sub(r"(?i)\b(cr[ée]e[- ]?(moi|nous)?|g[ée]n[èe]re[r]?|fais[- ]?(moi)?|pr[ée]pare|r[ée]dige|"
+                   r"met[s]?|exporte|produis|sors|un|une|des|le|la|les|en|au format|dans|s'?il te pla[îi]t|"
+                   r"stp|document|fichier|rapport|r[ée]capitulatif|cette|ces|information[s]?|aussi|et|ca|"
+                   r"pdf|word|excel|tableur|classeur|docx|xlsx)\b", " ", topic)
     topic = re.sub(r"\s+", " ", topic).strip(" .,:;-")
-    return {"format": fmt or "pdf", "refers_prior": refers_prior, "topic": topic}
+    return {"formats": formats, "format": formats[0], "refers_prior": refers_prior, "topic": topic}
 
 
 def doc_title(topic: str) -> str:
@@ -733,6 +737,28 @@ INSTITUTIONS = {
                      "kw": ["annuaire", "coordonnees", "contact administration", "adresse institution"]},
     "DATAGOUV":     {"label": "Portail des données ouvertes", "theme": "Données",
                      "kw": ["donnees ouvertes", "open data", "statistiques publiques", "jeu de donnees"]},
+    # ── Ministères ajoutés (scrape 2026-09) ──────────────────────────────────
+    "SANTE":        {"label": "Ministère de la Santé", "theme": "Santé",
+                     "kw": ["sante", "hopital", "hopitaux", "maladie", "couverture maladie", "cmu",
+                            "hygiene publique", "vaccination", "chu", "pierre dimba", "soins"]},
+    "AGRICULTURE":  {"label": "Ministère de l'Agriculture", "theme": "Agriculture",
+                     "kw": ["agriculture", "agricole", "productions vivrieres", "agriculteur",
+                            "vivrier", "developpement rural", "nabagne kone", "cultures"]},
+    "JUSTICE":      {"label": "Ministère de la Justice", "theme": "Justice",
+                     "kw": ["ministere de la justice", "juridiction", "magistrat", "droits de l homme",
+                            "e-justice", "e justice", "sansan kambile", "penitentiaire"]},
+    "INTERIEUR":    {"label": "Ministère de l'Intérieur et de la Sécurité", "theme": "Sécurité",
+                     "kw": ["ministere de l interieur", "police nationale", "prefet", "prefecture",
+                            "sous prefet", "collectivites territoriales", "vagondo diomande"]},
+    "EDUCATION":    {"label": "Ministère de l'Éducation Nationale", "theme": "Éducation",
+                     "kw": ["education nationale", "ecole", "eleve", "alphabetisation", "enseignant",
+                            "primaire", "secondaire", "koffi nguessan", "bepc", "cepe"]},
+    "ENERGIE":      {"label": "Ministère des Mines, du Pétrole et de l'Énergie", "theme": "Énergie",
+                     "kw": ["energie", "petrole", " mines", "electricite", "hydrocarbures", "gaz",
+                            "raffinage", "sangafowa", "minier", "petrolier"]},
+    "COMMERCE":     {"label": "Ministère du Commerce et de l'Industrie", "theme": "Commerce",
+                     "kw": ["commerce et industrie", "industrie", "industriel", "commercant",
+                            "concurrence", "khalil konate"]},
 }
 
 def org_label(org: str | None) -> str:

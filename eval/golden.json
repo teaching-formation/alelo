@@ -578,6 +578,129 @@
   ]
  },
  {
+  "id": "min-sante-actions",
+  "category": "ministeres",
+  "mode": "auto",
+  "q": "quelles actions concrètes mène le ministère de la Santé en Côte d'Ivoire ?",
+  "expect_any": [
+   "cmu",
+   "couverture maladie",
+   "sante",
+   "hygiene",
+   "vaccination",
+   "soins",
+   "hopital"
+  ],
+  "forbid": [
+   "aucune information"
+  ]
+ },
+ {
+  "id": "min-agriculture-actions",
+  "category": "ministeres",
+  "mode": "auto",
+  "q": "quelles actions mène le ministère de l'Agriculture ?",
+  "expect_any": [
+   "agricole",
+   "agriculture",
+   "vivrier",
+   "programme",
+   "rural",
+   "production",
+   "enquete"
+  ],
+  "forbid": [
+   "aucune information"
+  ]
+ },
+ {
+  "id": "min-interieur-actions",
+  "category": "ministeres",
+  "mode": "auto",
+  "q": "quelles actions mène le ministère de l'Intérieur et de la Sécurité ?",
+  "expect_any": [
+   "securite",
+   "police",
+   "interieur",
+   "prefecture",
+   "etat civil"
+  ],
+  "forbid": [
+   "aucune information"
+  ]
+ },
+ {
+  "id": "min-education-actions",
+  "category": "ministeres",
+  "mode": "auto",
+  "q": "quelles actions mène le ministère de l'Éducation Nationale ?",
+  "expect_any": [
+   "education",
+   "ecole",
+   "enseignement",
+   "strategie",
+   "alphabetisation",
+   "eleve"
+  ],
+  "forbid": [
+   "aucune information"
+  ]
+ },
+ {
+  "id": "min-energie-actions",
+  "category": "ministeres",
+  "mode": "auto",
+  "q": "quels projets dans le secteur des mines, du pétrole et de l'énergie ?",
+  "expect_any": [
+   "energie",
+   "mines",
+   "petrole",
+   "electricite",
+   "sirexe",
+   "hackathon",
+   "minier"
+  ],
+  "forbid": [
+   "aucune information"
+  ]
+ },
+ {
+  "id": "min-commerce-actions",
+  "category": "ministeres",
+  "mode": "auto",
+  "q": "quelles actions mène le ministère du Commerce et de l'Industrie ?",
+  "expect_any": [
+   "commerce",
+   "industrie",
+   "pme",
+   "secteur",
+   "prix",
+   "cepici"
+  ],
+  "forbid": [
+   "aucune information"
+  ]
+ },
+ {
+  "id": "min-justice-actions",
+  "category": "ministeres",
+  "mode": "auto",
+  "q": "quelles actions mène le ministère de la Justice ?",
+  "expect_any": [
+   "justice",
+   "droits",
+   "tribunal",
+   "loi",
+   "enfant",
+   "detenu",
+   "penitentiaire",
+   "audience"
+  ],
+  "forbid": [
+   "aucune information"
+  ]
+ },
+ {
   "id": "exp-multivolet",
   "category": "expert",
   "mode": "expert",

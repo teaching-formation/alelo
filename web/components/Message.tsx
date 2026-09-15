@@ -157,17 +157,17 @@ export default function Message({ msg, voice, streaming, canRegenerate, onRegene
           </>
         )}
 
-        {msg.document && !streaming && (
-          <a href={apiUrl(msg.document.url)} target="_blank" rel="noreferrer"
-             className="mt-3 inline-flex items-center gap-3 rounded-xl px-4 py-3 hover:opacity-90 transition"
+        {!streaming && (msg.documents?.length ? msg.documents : (msg.document ? [msg.document] : [])).map((doc) => (
+          <a key={doc.id} href={apiUrl(doc.url)} target="_blank" rel="noreferrer"
+             className="mt-3 mr-2 inline-flex items-center gap-3 rounded-xl px-4 py-3 hover:opacity-90 transition"
              style={{ background: "var(--bg-elev)", border: "1px solid var(--border)" }}>
-            <span className="text-2xl">{DOC_ICON[msg.document.format] || "📄"}</span>
+            <span className="text-2xl">{DOC_ICON[doc.format] || "📄"}</span>
             <span className="flex flex-col min-w-0">
-              <span className="text-sm font-medium truncate" style={{ color: "var(--text)" }}>{msg.document.filename}</span>
-              <span className="text-xs" style={{ color: "var(--accent)" }}>⬇ Télécharger le {msg.document.label}</span>
+              <span className="text-sm font-medium truncate" style={{ color: "var(--text)" }}>{doc.filename}</span>
+              <span className="text-xs" style={{ color: "var(--accent)" }}>⬇ Télécharger le {doc.label}</span>
             </span>
           </a>
-        )}
+        ))}
 
         {!isUser && !streaming && msg.content && (
           <>

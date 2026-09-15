@@ -8,7 +8,7 @@ export function apiUrl(path: string): string {
 
 export type DocInfo = { id: string; filename: string; format: string; label: string; url: string };
 
-export type Msg = { role: "user" | "assistant"; content: string; sources?: Source[]; ts?: number; document?: DocInfo; steps?: string[] };
+export type Msg = { role: "user" | "assistant"; content: string; sources?: Source[]; ts?: number; document?: DocInfo; documents?: DocInfo[]; steps?: string[] };
 export type Source = { url: string; title: string; excerpt?: string };
 export type VoiceInfo = { id: string; label: string; genre: string };
 export type ModelInfo = { id: string; label: string; flag?: string; recommended?: boolean };

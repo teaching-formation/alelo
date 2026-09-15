@@ -202,7 +202,7 @@ export default function Home() {
 
     const ac = new AbortController();
     abortRef.current = ac;
-    let answer = "", sources: any[] = [], document: any = undefined;
+    let answer = "", sources: any[] = [], document: any = undefined, documents: any = undefined;
     try {
       for await (const ev of chatStream({
         message: text, history,
@@ -216,7 +216,7 @@ export default function Home() {
           setMessages((m) => { const c = [...m]; c[idx] = { ...c[idx], content: answer }; return c; });
           sq?.push(ev.text);
         } else if (ev.type === "done") {
-          answer = ev.answer || answer; sources = ev.sources || []; document = ev.document;
+          answer = ev.answer || answer; sources = ev.sources || []; document = ev.document; documents = ev.documents;
         } else if (ev.type === "error") {
           answer = answer + "\n\n⚠️ La réponse a été interrompue (" + ev.message + "). Réessayez.";
         }
@@ -231,7 +231,7 @@ export default function Home() {
     abortRef.current = null;
     sq?.finish();
     streamingRef.current = false;
-    setMessages((m) => { const c = [...m]; c[idx] = { ...c[idx], role: "assistant", content: answer, sources, document, ts: Date.now() }; return c; });
+    setMessages((m) => { const c = [...m]; c[idx] = { ...c[idx], role: "assistant", content: answer, sources, document, documents, ts: Date.now() }; return c; });
     setBusy(false);
   }
 
