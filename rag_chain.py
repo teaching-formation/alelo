@@ -1552,6 +1552,156 @@ def chat_stream(vectordb: Chroma, question: str, history: list[dict],
     yield {"answer": answer, "sources": sources}
 
 
+# ══════════════════════════════════════════════════════════════════════════════
+# MODE EXPERT AGENTIQUE — tool-calling : le modèle orchestre lui-même la recherche
+# ══════════════════════════════════════════════════════════════════════════════
+# Au lieu de l'échafaudage déterministe (décompo/corrective/routage regex), le 14B
+# décide QUAND et QUOI chercher via l'outil `rechercher_documents`. L'outil réutilise
+# EXACTEMENT le pipeline vérifié (fiches du graphe + composition gouv. + chunks rerankés),
+# donc la source d'autorité reste la même. Repli sur chat_stream si l'agent échoue.
+AGENT_MODEL = os.getenv("EXPERT_MODEL", "alelo-14b")
+AGENT_MAX_STEPS = int(os.getenv("AGENT_MAX_STEPS", "4"))
+
+_AGENT_TOOLS = [{"type": "function", "function": {
+    "name": "rechercher_documents",
+    "description": ("Recherche dans les documents officiels des institutions et services publics de "
+                    "Côte d'Ivoire. À APPELER pour toute question factuelle (démarche, responsable, "
+                    "coût, délai, mission d'une institution, composition du gouvernement). Peut être "
+                    "appelé plusieurs fois : une fois par sous-question."),
+    "parameters": {"type": "object", "properties": {
+        "requete": {"type": "string", "description": "La requête de recherche, reformulée clairement."},
+        "institution": {"type": "string", "description": (
+            "Sigle si connu : GOUVERNEMENT (ministres/président/PM), ANSUT, CEPICI, DGI, TRESOR, "
+            "SNEDAI, SANTE, AGRICULTURE, JUSTICE, INTERIEUR, EDUCATION, ENERGIE, COMMERCE… "
+            "Laisser vide si incertain.")}},
+        "required": ["requete"]}}}]
+
+_AGENT_SYSTEM = (SYSTEM_PROMPT + "\n\nTu disposes de l'outil `rechercher_documents`. Pour toute "
+                 "question sur une institution, un service public, une démarche ou un responsable "
+                 "ivoirien, APPELLE cet outil AVANT de répondre, puis réponds UNIQUEMENT à partir "
+                 "des documents qu'il renvoie. Pour une question à plusieurs volets, appelle l'outil "
+                 "une fois par volet, sans mélanger les volets. Pour de la culture générale ou un "
+                 "calcul, réponds directement sans l'outil.")
+
+
+def _agent_search(vectordb, args) -> tuple[str, list]:
+    """Outil de l'agent : recherche enrichie IDENTIQUE au pipeline déterministe.
+    fiches du graphe (autorité) + composition gouv. si pertinent + chunks rerankés + fraîcheur.
+    Retourne (contexte_texte, docs) — les docs servent à construire les sources."""
+    req = (args.get("requete") or "").strip()
+    inst = (args.get("institution") or "").strip().upper() or None
+    if inst and inst not in INSTITUTIONS:
+        inst = None
+    docs = retrieve(vectordb, req, k=DEFAULT_K, org=inst or _route_org(req))
+    # Le modèle passe parfois une requête minimale (« dirigeant ») en s'appuyant sur le champ
+    # institution → on matche fiches/composition/fraîcheur sur « requête + institution ».
+    fq = (req + " " + (inst or "")).strip()
+    fiches = _match_service_fiches(fq)
+    graph_ctx = _fiche_context(fiches) if fiches else ""
+    gov_ctx = _gov_composition_context(fq)
+    fresh = _freshness_directive(docs) if _is_officeholder_q(fq) else ""
+    # Une fiche vérifiée donnant le dirigeant fait autorité pour une question nominative :
+    # on n'y mêle pas le corpus brut (dates parasites → faux « pris fonction le … »).
+    fiche_gives_dirigeant = _is_officeholder_q(fq) and any(f.get("dirigeant") for f in fiches)
+    raw = "" if fiche_gives_dirigeant else (_build_context(docs) if docs else "")
+    full = (gov_ctx + graph_ctx + fresh + raw).strip()
+    return (full[:5200] or "(aucun document trouvé pour cette requête)"), docs
+
+
+def agent_stream(vectordb: Chroma, question: str, history: list[dict],
+                 model: str = AGENT_MODEL, org: str | None = None):
+    """Mode Expert AGENTIQUE : boucle de tool-calling où le modèle orchestre la recherche.
+    Émet des `{"step": …}` pendant l'orchestration (invisibles côté texte), streame la réponse
+    finale token par token, puis `{"answer", "sources"}`. Repli sur chat_stream avant tout token
+    visible si la boucle d'outils échoue ou ne produit rien — le pipeline vérifié reste le filet."""
+    # Message social (bonjour, merci, qui es-tu…) → réponse directe, sans agent ni RAG
+    social = _detect_social(question)
+    if social:
+        answer = _social_response(social)
+        yield answer
+        yield {"answer": answer, "sources": []}
+        return
+
+    base_url = os.getenv("OLLAMA_BASE_URL", OLLAMA_BASE_URL)
+    all_docs: list = []
+    final_text = ""
+    try:
+        msgs = [{"role": "system", "content": _AGENT_SYSTEM}]
+        msgs += [{"role": m["role"], "content": m["content"]} for m in (history or [])]
+        msgs.append({"role": "user", "content": question})
+        for _step in range(AGENT_MAX_STEPS):
+            r = requests.post(
+                f"{base_url}/api/chat",
+                json={"model": model, "stream": False, "messages": msgs,
+                      "tools": _AGENT_TOOLS, "keep_alive": KEEP_ALIVE,
+                      "options": {"temperature": 0.15, "num_ctx": 8192}},
+                timeout=180)
+            r.raise_for_status()
+            m = r.json().get("message", {}) or {}
+            tcs = m.get("tool_calls") or []
+            if not tcs:                                   # le modèle a fini d'outiller → réponse
+                final_text = (m.get("content") or "").strip()
+                break
+            msgs.append(m)                                # message assistant portant les tool_calls
+            for tc in tcs:
+                fn = tc.get("function") or {}
+                if fn.get("name") != "rechercher_documents":
+                    msgs.append({"role": "tool", "content": "(outil inconnu)"})
+                    continue
+                a = fn.get("arguments") or {}
+                if isinstance(a, str):
+                    try:
+                        a = json.loads(a)
+                    except Exception:
+                        a = {"requete": a}
+                label = (a.get("requete") or "").strip()[:55]
+                yield {"step": f"🔎 Recherche : {label}…"}
+                ctx, docs = _agent_search(vectordb, a)
+                all_docs += docs
+                msgs.append({"role": "tool", "content": ctx})
+        else:
+            # garde-fou : la boucle a épuisé ses étapes sans réponse → une passe finale sans outil
+            yield {"step": "✍️ Rédaction de la réponse…"}
+            msgs.append({"role": "user", "content": "Réponds maintenant à partir de ce que tu as trouvé."})
+            r = requests.post(f"{base_url}/api/chat",
+                              json={"model": model, "stream": False, "messages": msgs,
+                                    "keep_alive": KEEP_ALIVE, "options": {"temperature": 0.15}},
+                              timeout=180)
+            r.raise_for_status()
+            final_text = (r.json().get("message", {}).get("content") or "").strip()
+        if not final_text:
+            raise RuntimeError("agent: réponse vide")
+    except Exception as e:                                # repli AVANT tout token visible
+        logger.warning("Agent Expert en échec (%s) → repli sur le pipeline vérifié", e)
+        yield {"step": "↩️ Repli sur le pipeline vérifié…"}
+        yield from chat_stream(vectordb, question, history, model=model, org=org, detail=True)
+        return
+
+    # Réponse déjà générée (non-streamée pendant l'orchestration) → on la « rejoue » par petits
+    # groupes de mots pour conserver l'animation de frappe, SANS re-générer (coûteux sur le 14B).
+    yield {"step": "✍️ Rédaction de la réponse…"}
+    buf, n = "", 0
+    for word in final_text.split(" "):
+        buf += word + " "
+        n += 1
+        if n >= 3:
+            yield buf
+            buf, n = "", 0
+    if buf:
+        yield buf
+
+    # Garde-fou chiffres (rapide, sans LLM) sur le contexte agrégé des recherches
+    answer = final_text
+    if FAITHFULNESS_CHECK and all_docs:
+        note = _faithfulness_caveat(_faithfulness_check(answer, _build_context(all_docs)))
+        if note:
+            yield note
+            answer += note
+
+    sources = _build_sources(all_docs, max_n=6)
+    yield {"answer": answer, "sources": sources}
+
+
 if __name__ == "__main__":
     import time
 

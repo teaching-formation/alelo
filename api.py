@@ -216,13 +216,13 @@ def _gen_document(db, req, doc_req):
 
 @app.post("/api/chat")
 def chat(req: ChatReq):
-    from rag_chain import chat_stream, detect_doc_request
+    from rag_chain import chat_stream, agent_stream, detect_doc_request
     db = get_db()
 
     # Le mode change la PROFONDEUR *et* le cerveau :
-    #   auto   → alelo (7B) : réponse simple, rapide, périmètre routé automatiquement ;
-    #   expert → alelo-14b (si dispo) : agentique (décompo, corrective, outils, auto-vérif),
-    #            périmètre optionnel imposé.
+    #   auto   → alelo (7B) : pipeline déterministe rapide, périmètre routé automatiquement ;
+    #   expert → alelo-14b (si dispo) : AGENTIQUE par tool-calling — le modèle orchestre lui-même
+    #            la recherche (agent_stream), avec repli sur le pipeline vérifié en cas d'échec.
     detail = (req.mode == "expert")
     model = expert_model() if detail else "alelo"
     org = (req.org or None) if req.mode == "expert" else None
@@ -261,8 +261,12 @@ def chat(req: ChatReq):
                     yield ev
                 _finish("(document généré)", [], kind="document")
                 return
-            for chunk in chat_stream(db, req.message, history=req.history,
-                                     model=model, org=org, detail=detail):
+            # Expert → agent tool-calling (le modèle orchestre) ; Auto → pipeline déterministe.
+            _stream = (agent_stream(db, req.message, history=req.history, model=model, org=org)
+                       if detail else
+                       chat_stream(db, req.message, history=req.history,
+                                   model=model, org=org, detail=detail))
+            for chunk in _stream:
                 if isinstance(chunk, str):
                     yield _sse({"type": "token", "text": chunk})
                 elif "step" in chunk:                 # étape agentique (Mode Expert)
