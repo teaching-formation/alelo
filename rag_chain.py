@@ -612,7 +612,10 @@ _DOC_NOUNS = ["document", "fichier", "rapport", "recapitulatif", "resume", "fich
               "dossier", "compte rendu", "compte-rendu"]
 _DOC_PRIOR = ["de ca", "ce que tu", "ce que vous", "notre echange", "notre conversation",
               "ce qui precede", "tout ca", "resume", "recapitul", "cela", "cette reponse",
-              "ta reponse", "precedent", "ci-dessus", "au-dessus", "ce dont on a parle"]
+              "ta reponse", "precedent", "ci-dessus", "au-dessus", "ce dont on a parle",
+              "ces informations", "cette information", "ces infos", "cette info",
+              "les informations", "l information", "ces donnees", "ces elements", "ces points",
+              "ces details", "ceci", "ces resultats", "reponse precedente", "cette liste"]
 
 
 def detect_doc_request(question: str) -> dict | None:

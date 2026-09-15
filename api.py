@@ -180,8 +180,14 @@ def _gen_document(db, req, doc_req):
     # 1) Contenu (généré UNE fois) : soit la dernière réponse (« mets ça en PDF »), soit une réponse fraîche.
     body, topic = "", doc_req.get("topic") or req.message
     if doc_req.get("refers_prior"):
+        # Corps = dernière réponse de l'assistant ; titre = dernière QUESTION de l'utilisateur
+        # (« met ces infos en PDF » → le sujet est la question précédente, pas la commande).
         body = next((m["content"] for m in reversed(req.history or [])
                      if m.get("role") == "assistant" and m.get("content", "").strip()), "")
+        prior_q = next((m["content"] for m in reversed(req.history or [])
+                        if m.get("role") == "user" and m.get("content", "").strip()), "")
+        if prior_q:
+            topic = prior_q
     if not body:
         res = rag_chat(db, topic or req.message, history=req.history, detail=True)
         body = res.get("answer", "")
