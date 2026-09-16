@@ -78,9 +78,10 @@ def guess_lang(text: str) -> str:
     return "en" if en > fr else "fr"
 
 
-def ask(url: str, q: str, mode: str, timeout: int) -> str:
-    """POST /api/chat en SSE ; renvoie le texte final de la réponse."""
-    payload = json.dumps({"message": q, "history": [], "mode": mode}).encode("utf-8")
+def ask(url: str, q: str, mode: str, timeout: int, history=None) -> str:
+    """POST /api/chat en SSE ; renvoie le texte final de la réponse.
+    `history` (optionnel) permet de tester des SUIVIS multi-tours (ancrage du sujet)."""
+    payload = json.dumps({"message": q, "history": history or [], "mode": mode}).encode("utf-8")
     req = urllib.request.Request(
         url.rstrip("/") + "/api/chat", data=payload,
         headers={"Content-Type": "application/json", "Accept": "text/event-stream"},
@@ -171,7 +172,7 @@ def main() -> int:
         print(f"{DIM}[{i:>2}/{len(cases)}]{RESET} {DIM}{cat:<16}{RESET} {c['id']:<20} ", end="", flush=True)
         t = time.time()
         try:
-            ans = ask(args.url, c["q"], mode, args.timeout)
+            ans = ask(args.url, c["q"], mode, args.timeout, c.get("history"))
             fails = check(c, ans)
             err = None
         except (urllib.error.URLError, RuntimeError, TimeoutError, OSError) as e:

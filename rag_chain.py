@@ -106,6 +106,8 @@ Règles :
 6. Tu ES la source : tu as déjà rassemblé les informations publiques officielles de ces institutions. Ne renvoie donc JAMAIS le citoyen « consulter le site web » ou « contacter le service communication » pour obtenir une information — donne-lui directement ce que contiennent les documents. Termine plutôt par une ouverture PROACTIVE sur ce que tu peux fournir de plus, ex. : « Je peux te détailler chacune de ces actions », « Veux-tu la liste des démarches concrètes ? », « Je peux t'indiquer les pièces à fournir ». Ne donne un contact, une adresse ou un site externe QUE si c'est une étape réelle et nécessaire du parcours (déposer un dossier, prendre un rendez-vous physique, faire une téléprocédure précise) — et alors cite-la précisément d'après les documents, jamais comme formule d'esquive.
 7. Réponds dans la LANGUE de la question de l'utilisateur (français par défaut ; si la question est en anglais, réponds en anglais, etc.), de façon claire et CONCISE (5 à 8 phrases maximum), sans remplissage.
 8. Tu ne connais PAS le nom de l'utilisateur. Ne l'appelle JAMAIS par un nom propre (« M. X », « Madame Y »), et n'extrais JAMAIS un nom de personne des documents pour t'adresser à lui : les noms qui figurent dans les sources désignent des TIERS (responsables, agents, signataires…), jamais l'utilisateur. Adresse-toi à lui de manière neutre (« vous »), sans nom.
+9. N'AFFIRME JAMAIS qu'un service, un téléservice, une téléprocédure, un portail ou une prise de rendez-vous EN LIGNE « n'existe pas » ou « n'est pas disponible », sauf si un document le dit EXPLICITEMENT. Si une fiche ou un document mentionne un portail/site de démarche (ex. pré-enrôlement, prise de rendez-vous en ligne), tu DOIS le présenter comme la voie en ligne existante. Si tu n'as pas l'information, dis « je n'ai pas cette information » et oriente — ne conclus jamais à l'inexistence par défaut : nier à tort un service en ligne est une faute grave qui envoie le citoyen se déplacer inutilement.
+10. RESTE SUR LA DÉMARCHE EN COURS. Dans un échange multi-tours, une question de suivi (« et en ligne ? », « pour le rendez-vous ? », « quels documents ? », « combien de temps ? ») porte sur LA MÊME démarche que précédemment. Ne bascule PAS vers une démarche voisine (ex. ne réponds pas sur le VISA quand la conversation porte sur le PASSEPORT). Garde le même service tant que l'utilisateur n'en nomme pas un autre.
 
 Mieux vaut dire « je n'ai pas cette information » que de donner une réponse fausse."""
 
@@ -928,23 +930,42 @@ _FOLLOWUP_WORDS = {
 #  connue, elle route → traitée comme autonome AVANT d'arriver ici.)
 _STRONG_ANAPHORA = {"ce", "cet", "cette", "ces"}
 
+# Continuations de DÉMARCHE (sous-chaînes, forme normalisée) : « et en ligne ? »,
+# « pour prendre rendez-vous ? », « quels documents ? », « combien de temps ? »… Pas des anaphores,
+# mais clairement une suite sur le service en cours. Protégées par l'org-gate de _is_followup
+# (une question nommant une institution repart déjà comme autonome AVANT ce test).
+_SERVICE_CONTINUATION = (
+    "en ligne", "en ligne ?", "rendez vous", "rdv", "inscription", "s inscrire", "inscrire",
+    "teleservice", "teleprocedure", "sur place", "guichet", "au guichet", "delai", "combien de temps",
+    "duree", "cout", "prix", "tarif", "montant", "combien", "document", "piece", "formulaire",
+    "dossier", "quelles pieces", "et apres", "et ensuite", "prochaine etape", "etape suivante")
+
+
 def _is_followup(question: str, org: str | None = None) -> bool:
-    """Détecte une vraie question de suivi (anaphore vers l'échange précédent).
-    Si la question nomme clairement une organisation/sujet → question autonome (pas un suivi),
-    ce qui évite de traîner le contexte précédent (ex. Gilles Thierry Beugré/ANSUT) sur
+    """Détecte une vraie question de suivi (anaphore ou continuation de démarche vers l'échange
+    précédent). Si la question nomme clairement une organisation/sujet → question autonome (pas un
+    suivi), ce qui évite de traîner le contexte précédent (ex. Gilles Thierry Beugré/ANSUT) sur
     une question CGECI."""
     if org is None:
         org = _route_org(question)
-    if org is not None:            # sujet clair → question autonome
+    if org is not None:            # sujet clair (institution nommée) → question autonome
         return False
+    if _match_service_fiches(question):   # nomme un SERVICE précis (passeport, carte grise, CNI…)
+        return False                       # → sujet propre, pas un suivi (évite la contamination)
     # Sans institution nommée : c'est un suivi si la question porte un mot-déclencheur
     # (anaphore, demande d'exemple/précision « par exemple », « lesquels », « comment »…)
     # et reste courte. Une question qui apporte son PROPRE sujet (ex. « combien coûte
-    # un passeport ? ») n'a pas de déclencheur → traitée comme autonome.
-    words = set(normalize(question).split())
+    # un passeport ? ») a un sujet → l'org-gate ci-dessus l'a déjà traitée comme autonome.
+    n = normalize(question)
+    words = set(n.split())
     if words & _STRONG_ANAPHORA:   # « ce ministère là », « cette agence » → suivi (toute longueur)
         return True
-    return bool(words & _FOLLOWUP_WORDS) and len(question.split()) < 12
+    if bool(words & _FOLLOWUP_WORDS) and len(question.split()) < 12:
+        return True
+    # Continuation de démarche (« et pour le RDV ? », « c'est en ligne ? », « quels documents ? »)
+    if len(question.split()) < 14 and any(c in n for c in _SERVICE_CONTINUATION):
+        return True
+    return False
 
 
 # Une question « actions / réalisations / projets / bilan » d'un responsable ou d'une institution
@@ -955,10 +976,32 @@ _ACTION_WORDS = ["action", "actions", "realisation", "realisations", "realise", 
                  "ont fait", "accompli", "qu a t il fait", "programme", "programmes"]
 
 
+def _subject_anchor(question: str, history: list[dict], org: str | None = None) -> str:
+    """Pour un SUIVI, retrouve le SUJET de la conversation : le tour utilisateur le plus récent qui
+    nomme une institution OU un service (on remonte l'historique), sinon le dernier tour utilisateur.
+    Gère les suivis EN CHAÎNE (« service en ligne ? » puis « et pour le RDV ? » : les deux sont sans
+    sujet propre → on remonte jusqu'à « obtenir mon passeport »). Renvoie '' si la question a son
+    propre sujet (pas un suivi) — pas de contamination d'un sujet sur un autre."""
+    if not history or not _is_followup(question, org):
+        return ""
+    fallback = ""
+    for msg in reversed(history):
+        if msg.get("role") != "user":
+            continue
+        c = (msg.get("content") or "").strip()
+        if not c:
+            continue
+        if not fallback:
+            fallback = c                      # à défaut de sujet, le dernier tour user
+        if _route_org(c) or _match_service_fiches(c):
+            return c                          # tour user portant un sujet clair → ancre
+    return fallback
+
+
 def _build_search_query(question: str, history: list[dict], org: str | None = None) -> str:
     """
     Construit une requête de recherche autonome.
-    Enrichit UNIQUEMENT les vraies suites anaphoriques ('et lui ?', 'précise').
+    Enrichit UNIQUEMENT les vraies suites (anaphore 'et lui ?', continuation de démarche 'et le RDV ?').
     Une question avec un sujet clair reste telle quelle (pas de contamination).
     Pour une question « actions/réalisations/projets », ajoute des termes orientés PROJETS afin
     de remonter les initiatives de l'institution (et non la bio du responsable).
@@ -972,19 +1015,10 @@ def _build_search_query(question: str, history: list[dict], org: str | None = No
         # Termes neutres (marchent pour un ministère, une agence, une direction, un DG/DGA…).
         boost = " projets programmes initiatives realisations chantiers reformes activites bilan mesures"
 
-    if not history or not _is_followup(question, org):
+    anchor = _subject_anchor(question, history, org)   # '' si sujet propre ; sinon le sujet en cours
+    if not anchor:
         return q + boost
-
-    # Ancre la recherche sur le SUJET précédent = la dernière question de l'utilisateur.
-    # (On ignore la réponse de l'assistant : elle ajoute du bruit et peut être générique.)
-    last_user = ""
-    for msg in reversed(history):
-        if msg.get("role") == "user" and msg.get("content", "").strip():
-            last_user = msg["content"].strip()
-            break
-    if not last_user:
-        return q + boost
-    return f"{last_user} {q}" + boost
+    return f"{anchor} {q}" + boost
 
 
 _FR_STOP = {"le", "la", "les", "des", "un", "une", "est", "que", "qui", "pour", "comment",
@@ -1429,9 +1463,19 @@ def chat_stream(vectordb: Chroma, question: str, history: list[dict],
         yield {"answer": answer, "sources": []}
         return
 
-    # Routage automatique du périmètre si non imposé
+    # Requête ANCRÉE : pour un suivi (« et en ligne ? », « pour le RDV ? »), on hérite du SUJET de
+    # l'échange (le passeport reste le passeport). Sert au périmètre, au matching des fiches ET à la
+    # recherche, pour ne pas dériver vers une démarche voisine quand le suivi ne nomme plus le service.
+    # IMPORTANT : on décide le suivi sur le périmètre D'ORIGINE (orig_org). Router org sur la requête
+    # ancrée AVANT ferait croire à _is_followup que la question est autonome (org non-None) et
+    # casserait l'ancrage de la recherche.
+    orig_org = org
+    _anchor = _subject_anchor(question, history, orig_org)
+    grounded_q = f"{_anchor} {question}".strip() if _anchor else question
+
+    # Routage automatique du périmètre si non imposé (sur la requête ancrée)
     if org is None and AUTO_ROUTE:
-        org = _route_org(question)
+        org = _route_org(grounded_q)
 
     context = None
     decomposed = False
@@ -1457,7 +1501,7 @@ def chat_stream(vectordb: Chroma, question: str, history: list[dict],
         else:
             # Étape 1 : re-recherche corrective (question simple).
             yield {"step": "🔎 Recherche dans les documents…"}
-            search_query = _build_search_query(question, history, org)
+            search_query = _build_search_query(question, history, orig_org)
             docs = retrieve(vectordb, search_query, k=k, org=org)
             if _best_score(docs) < CORRECTIVE_MIN:            # contexte jugé faible
                 yield {"step": "Contexte faible — je reformule la recherche…"}
@@ -1469,7 +1513,7 @@ def chat_stream(vectordb: Chroma, question: str, history: list[dict],
                         yield {"step": "🔁 De meilleurs résultats après reformulation."}
     else:
         # ── Mode Auto — recherche directe (rapide) ──
-        search_query = _build_search_query(question, history, org)
+        search_query = _build_search_query(question, history, orig_org)
         docs = retrieve(vectordb, search_query, k=k, org=org)
 
     # Garde-fou no-context : aucun document pertinent → on n'invente pas
@@ -1479,7 +1523,8 @@ def chat_stream(vectordb: Chroma, question: str, history: list[dict],
         return
 
     # ── GraphRAG : fiche(s) structurée(s) faisant autorité (lookup, sans LLM) ──
-    fiches = _match_service_fiches(question)
+    # Sur la requête ANCRÉE : un suivi (« et en ligne ? ») garde la fiche du service en cours.
+    fiches = _match_service_fiches(grounded_q)
     graph_ctx = ""
     if fiches:
         if detail:

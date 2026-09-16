@@ -747,6 +747,80 @@
   ]
  },
  {
+  "id": "demarche-passeport-enligne",
+  "category": "demarches",
+  "mode": "auto",
+  "q": "est-ce que je peux faire les démarches de mon passeport en ligne ?",
+  "expect_any": [
+   "monpasseport",
+   "en ligne",
+   "pre enrolement",
+   "enrolement"
+  ],
+  "forbid": [
+   "il n existe pas de",
+   "aucun service en ligne",
+   "pas de service en ligne",
+   "pas de procedure en ligne"
+  ]
+ },
+ {
+  "id": "suivi-passeport-enligne",
+  "category": "suivi",
+  "mode": "auto",
+  "q": "il n'y pas de service en ligne ?",
+  "history": [
+   {
+    "role": "user",
+    "content": "dis moi comment je fais pour obtenir mon passeport"
+   },
+   {
+    "role": "assistant",
+    "content": "Pour le passeport, commencez par le pré-enrôlement sur monpasseport.ci, puis fournissez une photo, un extrait de naissance et votre CNI ; le coût est de 40 000 F CFA."
+   }
+  ],
+  "expect_any": [
+   "monpasseport",
+   "en ligne",
+   "pre enrolement",
+   "enrolement"
+  ]
+ },
+ {
+  "id": "suivi-passeport-rdv",
+  "category": "suivi",
+  "mode": "auto",
+  "q": "mais on fait d'inscription en ligne pour prendre RDV ?",
+  "history": [
+   {
+    "role": "user",
+    "content": "dis moi comment je fais pour obtenir mon passeport"
+   },
+   {
+    "role": "assistant",
+    "content": "Pour le passeport, commencez par le pré-enrôlement sur monpasseport.ci, puis fournissez une photo, un extrait de naissance et votre CNI ; le coût est de 40 000 F CFA."
+   },
+   {
+    "role": "user",
+    "content": "il n'y pas de service en ligne ?"
+   },
+   {
+    "role": "assistant",
+    "content": "Il existe bien un service en ligne : le pré-enrôlement se fait sur monpasseport.ci."
+   }
+  ],
+  "expect_any": [
+   "monpasseport",
+   "pre enrolement",
+   "enrolement",
+   "rendez",
+   "en ligne"
+  ],
+  "forbid": [
+   "visa"
+  ]
+ },
+ {
   "id": "gov-premier-chef",
   "category": "ministres",
   "mode": "auto",
