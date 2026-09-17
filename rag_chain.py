@@ -930,15 +930,30 @@ _FOLLOWUP_WORDS = {
 #  connue, elle route → traitée comme autonome AVANT d'arriver ici.)
 _STRONG_ANAPHORA = {"ce", "cet", "cette", "ces"}
 
-# Continuations de DÉMARCHE (sous-chaînes, forme normalisée) : « et en ligne ? »,
-# « pour prendre rendez-vous ? », « quels documents ? », « combien de temps ? »… Pas des anaphores,
-# mais clairement une suite sur le service en cours. Protégées par l'org-gate de _is_followup
-# (une question nommant une institution repart déjà comme autonome AVANT ce test).
-_SERVICE_CONTINUATION = (
-    "en ligne", "en ligne ?", "rendez vous", "rdv", "inscription", "s inscrire", "inscrire",
-    "teleservice", "teleprocedure", "sur place", "guichet", "au guichet", "delai", "combien de temps",
-    "duree", "cout", "prix", "tarif", "montant", "combien", "document", "piece", "formulaire",
-    "dossier", "quelles pieces", "et apres", "et ensuite", "prochaine etape", "etape suivante")
+# Continuations de SUIVI (le citoyen poursuit sur le MÊME sujet — démarche OU institution — sans le
+# renommer). Protégées par l'org-gate + fiche-gate de _is_followup (une question nommant un
+# service/une institution repart déjà comme autonome AVANT ce test).
+# Mots ENTIERS (token) — évite les faux positifs de sous-chaîne (« role » dans « controle »,
+# « mission » dans « commission », « action » dans « reaction »).
+_CONT_WORDS = {
+    # démarche
+    "delai", "delais", "cout", "couts", "coute", "coutent", "couter", "prix", "tarif", "tarifs",
+    "montant", "duree", "guichet", "guichets", "inscription", "inscriptions", "rdv", "teleservice",
+    "teleprocedure", "document", "documents", "piece", "pieces", "formulaire", "formulaires",
+    "dossier", "dossiers", "combien", "enrolement", "recepisse",
+    # institution / responsable
+    "actions", "action", "realisations", "realisation", "realise", "missions", "mission", "role",
+    "roles", "attributions", "attribution", "competences", "competence", "budget", "budgets",
+    "siege", "tutelle", "rattache", "rattachee", "rattaches", "rattachement", "mandat", "projets",
+    "directeur", "directrice", "dirigeant", "dirige", "responsable", "adresse", "contact",
+}
+# Locutions (sous-chaîne) — sûres car multi-mots ou stems sans ambiguïté.
+_CONT_PHRASES = (
+    "en ligne", "rendez vous", "combien de temps", "sur place", "quel ministere", "quels ministere",
+    "a quel ministere", "de tutelle", "quelles pieces", "quels documents", "et apres", "et ensuite",
+    "prochaine etape", "etape suivante", "s inscrire")
+# Possessifs anaphoriques : « et SES actions ? », « SON rôle ? », « LEUR budget ? ».
+_POSSESSIVE = {"son", "sa", "ses", "leur", "leurs"}
 
 
 def _is_followup(question: str, org: str | None = None) -> bool:
@@ -962,8 +977,10 @@ def _is_followup(question: str, org: str | None = None) -> bool:
         return True
     if bool(words & _FOLLOWUP_WORDS) and len(question.split()) < 12:
         return True
-    # Continuation de démarche (« et pour le RDV ? », « c'est en ligne ? », « quels documents ? »)
-    if len(question.split()) < 14 and any(c in n for c in _SERVICE_CONTINUATION):
+    # Continuation de suivi — démarche OU institution (« c'est en ligne ? », « quels documents ? »,
+    # « et ses actions ? », « son rôle ? », « rattaché à quel ministère ? »)
+    if len(question.split()) < 14 and (
+            words & _CONT_WORDS or words & _POSSESSIVE or any(p in n for p in _CONT_PHRASES)):
         return True
     return False
 
@@ -1288,8 +1305,11 @@ _GRAPH_KW = {
     "casier_judiciaire": ["casier judiciaire", "casier"],
     "carte_sejour": ["carte de sejour", "titre de sejour"],
     "acte_mariage": ["acte de mariage", "certificat de mariage"],
-    "creation_entreprise": ["creer une entreprise", "creation d entreprise", "creation entreprise",
-                            "cepici", "guichet unique", "immatriculer mon entreprise"],
+    "creation_entreprise": ["creer une entreprise", "creer mon entreprise", "creer son entreprise",
+                            "creer sa societe", "creer une societe", "monter une entreprise",
+                            "ouvrir une entreprise", "creation d entreprise", "creation entreprise",
+                            "immatriculer", "immatriculation d entreprise", "cepici", "guichet unique",
+                            "immatriculer mon entreprise", "formalites des entreprises"],
     "impots": ["impot", "impots", "e-impots", "e impots", "declaration fiscale"],
     "carte_grise": ["carte grise", "immatriculation", "certificat d immatriculation"],
     "carte_resident": ["carte de resident"],
@@ -1365,8 +1385,12 @@ def _fiche_context(fiches: list) -> str:
         # PAS injectés — sinon le modèle recopie la date de vérification comme si c'était un fait.
         blocks.append("\n".join(b))
     return ("[FICHES OFFICIELLES — graphe de connaissances alélo. Ces données STRUCTURÉES font "
-            "autorité : appuie-toi dessus en priorité. N'affirme un coût ou un délai QUE s'il "
-            "figure ci-dessus ; sinon invite à vérifier sans inventer de chiffre.]\n"
+            "AUTORITÉ et PRIMENT sur les documents bruts plus bas : en cas de DIVERGENCE (coût, "
+            "délai, procédure, opérateur, où faire la démarche), utilise la FICHE, jamais le document "
+            "brut. Le COÛT et le DÉLAI officiels sont CEUX de la fiche — n'en donne pas d'autres "
+            "trouvés ailleurs. Si un champ est absent, ne l'invente pas. Si la fiche indique un délai "
+            "« non fixé » ou met en garde contre une valeur (champ « À noter »), RESPECTE-le à la "
+            "lettre et ne cite JAMAIS la valeur qu'elle écarte.]\n"
             + "\n\n".join(blocks) + "\n\n")
 
 
@@ -1543,8 +1567,22 @@ def chat_stream(vectordb: Chroma, question: str, history: list[dict],
     # on n'y mêle PAS le corpus brut (ses dates parasites deviennent des « pris fonction le … » faux).
     fiche_gives_dirigeant = _is_officeholder_q(question) and any(f.get("dirigeant") for f in fiches)
 
+    # Question de COÛT ou de DÉLAI dont une fiche porte DÉJÀ la valeur → la fiche SUFFIT et fait
+    # autorité : on retire le corpus brut, dont les chiffres divergents (ex. « duplicata au CHU,
+    # une semaine » ou « CNI 45 jours ») deviennent sinon des coûts/délais faux. (grounded_q =
+    # requête ancrée, donc marche aussi pour un suivi « et le délai ? ».)
+    _gq = normalize(grounded_q)
+    _ask_cost = any(w in _gq for w in ("cout", "prix", "tarif", "combien", "montant", "coute"))
+    _ask_delay = any(w in _gq for w in ("delai", "duree", "combien de temps", " temps"))
+    # Une NOTE de fiche est un caveat faisant autorité (ex. « délai non fixé, PAS 45 jours ») : pour
+    # une question coût/délai, on retire aussi le corpus brut (sinon le chiffre écarté y ré-apparaît).
+    _fiche_note = any(f.get("note") for f in fiches)
+    fiche_answers_costdelay = ((_ask_cost and any(f.get("cout") for f in fiches))
+                               or (_ask_delay and any(f.get("delai") for f in fiches))
+                               or ((_ask_cost or _ask_delay) and _fiche_note))
+
     if context is None:                                       # chemin simple (Auto ou corrective)
-        context = "" if fiche_gives_dirigeant else _build_context(docs)
+        context = "" if (fiche_gives_dirigeant or fiche_answers_costdelay) else _build_context(docs)
 
     if detail:
         yield {"step": "✍️ Synthèse des volets…" if decomposed else "✍️ Rédaction de la réponse…"}
@@ -1626,21 +1664,31 @@ _AGENT_SYSTEM = (SYSTEM_PROMPT + "\n\nTu disposes de l'outil `rechercher_documen
                  "ivoirien, APPELLE cet outil AVANT de répondre, puis réponds UNIQUEMENT à partir "
                  "des documents qu'il renvoie. Pour une question à plusieurs volets, appelle l'outil "
                  "une fois par volet, sans mélanger les volets. Pour de la culture générale ou un "
-                 "calcul, réponds directement sans l'outil.")
+                 "calcul, réponds directement sans l'outil.\n"
+                 "NE DONNE JAMAIS de mémoire un coût, un délai, une pièce à fournir, une procédure "
+                 "ou un nom de responsable : ces faits DOIVENT provenir d'une recherche — si tu n'as "
+                 "pas cherché, cherche. Une question de SUIVI (« et le délai ? », « combien ça coûte ? », "
+                 "« et ses actions ? », « c'est en ligne ? ») porte sur le sujet DÉJÀ évoqué : reformule "
+                 "ta requête avec CE sujet (ex. « délai carte nationale d'identité », « actions ANSUT ») "
+                 "et cherche — ne réponds pas de tête et ne change pas de sujet.")
 
 
-def _agent_search(vectordb, args) -> tuple[str, list]:
+def _agent_search(vectordb, args, subject: str = "") -> tuple[str, list]:
     """Outil de l'agent : recherche enrichie IDENTIQUE au pipeline déterministe.
     fiches du graphe (autorité) + composition gouv. si pertinent + chunks rerankés + fraîcheur.
+    `subject` = sujet de l'échange (pour un SUIVI, injecté ci-dessous) : garantit que même une
+    requête vague du modèle (« actions », « délai ») reste ancrée sur le bon service/institution.
     Retourne (contexte_texte, docs) — les docs servent à construire les sources."""
     req = (args.get("requete") or "").strip()
     inst = (args.get("institution") or "").strip().upper() or None
     if inst and inst not in INSTITUTIONS:
         inst = None
-    docs = retrieve(vectordb, req, k=DEFAULT_K, org=inst or _route_org(req))
+    # Ancrage déterministe : on préfixe le sujet de l'échange à la requête du modèle (comme Auto).
+    req_anchored = (subject + " " + req).strip() if subject else req
+    docs = retrieve(vectordb, req_anchored, k=DEFAULT_K, org=inst or _route_org(req_anchored))
     # Le modèle passe parfois une requête minimale (« dirigeant ») en s'appuyant sur le champ
-    # institution → on matche fiches/composition/fraîcheur sur « requête + institution ».
-    fq = (req + " " + (inst or "")).strip()
+    # institution → on matche fiches/composition/fraîcheur sur « sujet + requête + institution ».
+    fq = (req_anchored + " " + (inst or "")).strip()
     fiches = _match_service_fiches(fq)
     graph_ctx = _fiche_context(fiches) if fiches else ""
     gov_ctx = _gov_composition_context(fq)
@@ -1648,7 +1696,15 @@ def _agent_search(vectordb, args) -> tuple[str, list]:
     # Une fiche vérifiée donnant le dirigeant fait autorité pour une question nominative :
     # on n'y mêle pas le corpus brut (dates parasites → faux « pris fonction le … »).
     fiche_gives_dirigeant = _is_officeholder_q(fq) and any(f.get("dirigeant") for f in fiches)
-    raw = "" if fiche_gives_dirigeant else (_build_context(docs) if docs else "")
+    # Question coût/délai + fiche portant la valeur (ou une note-caveat) → la fiche suffit et prime :
+    # on retire le corpus brut (ses chiffres divergents deviennent des coûts/délais faux, ex. « 45 j »).
+    _fq = normalize(fq)
+    _ask_cost = any(w in _fq for w in ("cout", "prix", "tarif", "combien", "montant", "coute"))
+    _ask_delay = any(w in _fq for w in ("delai", "duree", "combien de temps", " temps"))
+    fiche_answers_costdelay = ((_ask_cost and any(f.get("cout") for f in fiches))
+                               or (_ask_delay and any(f.get("delai") for f in fiches))
+                               or ((_ask_cost or _ask_delay) and any(f.get("note") for f in fiches)))
+    raw = "" if (fiche_gives_dirigeant or fiche_answers_costdelay) else (_build_context(docs) if docs else "")
     full = (gov_ctx + graph_ctx + fresh + raw).strip()
     return (full[:5200] or "(aucun document trouvé pour cette requête)"), docs
 
@@ -1670,10 +1726,24 @@ def agent_stream(vectordb: Chroma, question: str, history: list[dict],
     base_url = os.getenv("OLLAMA_BASE_URL", OLLAMA_BASE_URL)
     all_docs: list = []
     final_text = ""
+    # Sujet de l'échange : pour un SUIVI (« et le délai ? », « et ses actions ? »), on l'injectera
+    # dans CHAQUE recherche → même si le 14B passe une requête vague, elle reste ancrée sur le bon
+    # service/institution (le déterminisme d'Auto, appliqué à l'orchestration de l'agent).
+    subject = _subject_anchor(question, history, org)
     try:
         msgs = [{"role": "system", "content": _AGENT_SYSTEM}]
         msgs += [{"role": m["role"], "content": m["content"]} for m in (history or [])]
-        msgs.append({"role": "user", "content": question})
+        # SUIVI (« et le délai ? », « et ses actions ? ») : le 14B répond parfois de mémoire sans
+        # chercher → on PRÉ-CHARGE une recherche ancrée sur le sujet et on l'injecte, pour garantir un
+        # grounding fiable même si le modèle n'appelle pas l'outil (il peut encore chercher davantage).
+        user_content = question
+        if subject:
+            ctx0, docs0 = _agent_search(vectordb, {"requete": question}, subject)
+            all_docs += docs0
+            user_content = ("[Documents officiels pour répondre à cette question de suivi — "
+                            "appuie-toi dessus EN PRIORITÉ, ne réponds pas de mémoire]\n" + ctx0
+                            + "\n\nQuestion : " + question)
+        msgs.append({"role": "user", "content": user_content})
         for _step in range(AGENT_MAX_STEPS):
             r = requests.post(
                 f"{base_url}/api/chat",
@@ -1701,7 +1771,7 @@ def agent_stream(vectordb: Chroma, question: str, history: list[dict],
                         a = {"requete": a}
                 label = (a.get("requete") or "").strip()[:55]
                 yield {"step": f"🔎 Recherche : {label}…"}
-                ctx, docs = _agent_search(vectordb, a)
+                ctx, docs = _agent_search(vectordb, a, subject)
                 all_docs += docs
                 msgs.append({"role": "tool", "content": ctx})
         else:
