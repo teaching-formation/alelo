@@ -171,18 +171,57 @@ def _sse(obj):
     return f"data: {json.dumps(obj)}\n\n"
 
 
+_NUM_WORDS = {"deux": 2, "trois": 3, "quatre": 4, "cinq": 5, "2": 2, "3": 3, "4": 4, "5": 5}
+_DOC_CONFIRM_PREFIXES = ("c est pret", "done ✅", "done!", "(document")
+
+
+def _prior_count(msg: str) -> int:
+    """Combien de réponses précédentes compiler dans le document ? « les 2 / les deux » → 2,
+    « les 3 démarches » → 3, « toutes ces infos / tout » → jusqu'à 6 ; défaut 1 (la dernière)."""
+    from rag_chain import normalize
+    n = " " + normalize(msg) + " "
+    if any(w in n for w in (" toutes ", " tous ", " toute ", " l ensemble ", " le tout ", " tout ca ")):
+        return 6
+    for w, v in _NUM_WORDS.items():
+        if f" {w} " in n:                  # « les 2 », « 2 infos », « les deux »
+            return v
+    # Pluriel générique (« ces informations », « ces infos », « ces démarches ») → cluster récent
+    # (plafonné ; s'il n'y a qu'une réponse substantielle, on n'en prend qu'une — pas de sur-inclusion).
+    if any(w in n for w in (" informations ", " infos ", " demarches ", " donnees ", " reponses ")):
+        return 3
+    return 1
+
+
+def _prior_answers(history, n: int) -> list:
+    """Les n dernières réponses NON VIDES de l'assistant, en ordre chronologique, en ignorant
+    les confirmations de génération de document (« C'est prêt ✅ … ») des tours précédents."""
+    from rag_chain import normalize
+    out = []
+    for m in reversed(history or []):
+        if m.get("role") != "assistant":
+            continue
+        c = (m.get("content") or "").strip()
+        if not c or normalize(c)[:40].startswith(_DOC_CONFIRM_PREFIXES):
+            continue
+        out.append(c)
+        if len(out) >= n:
+            break
+    return list(reversed(out))
+
+
 def _gen_document(db, req, doc_req):
     """Génère un document (PDF/Word/Excel) : contenu RAG → fichier → carte de téléchargement."""
     import documents
     from rag_chain import chat as rag_chat, doc_title, _detect_lang
 
     formats = doc_req.get("formats") or [doc_req.get("format", "pdf")]
-    # 1) Contenu (généré UNE fois) : soit la dernière réponse (« mets ça en PDF »), soit une réponse fraîche.
-    # `topic` = titre fourni par le modèle (tool-call) ; à défaut, la question précédente.
+    # 1) Contenu (généré UNE fois) : soit les N réponses précédentes (« mets les 2 infos en PDF »),
+    # soit une réponse fraîche. `topic` = titre fourni par le modèle (tool-call) ; sinon question préc.
     body, topic = "", (doc_req.get("topic") or "").strip()
     if doc_req.get("refers_prior"):
-        body = next((m["content"] for m in reversed(req.history or [])
-                     if m.get("role") == "assistant" and m.get("content", "").strip()), "")
+        # « les 2 / les deux / ces infos » → on compile PLUSIEURS réponses, pas seulement la dernière.
+        answers = _prior_answers(req.history, _prior_count(req.message))
+        body = "\n\n".join(answers)
         if not topic:                      # pas de titre du modèle → sujet = question précédente
             topic = next((m["content"] for m in reversed(req.history or [])
                           if m.get("role") == "user" and m.get("content", "").strip()), "")
